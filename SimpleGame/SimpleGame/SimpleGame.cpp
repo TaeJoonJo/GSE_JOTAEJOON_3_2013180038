@@ -15,7 +15,11 @@ but WITHOUT ANY WARRANTY.
 
 #include "Renderer.h"
 
+#include "GameObject.h"
+#include "Rect.h"
+
 Renderer *g_Renderer = NULL;
+CGameObject* pRect;
 
 void RenderScene(void)
 {
@@ -23,7 +27,7 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	g_Renderer->DrawSolidRect(100, 0, 0, 100, 1, 1, 1, 0.5);
+	g_Renderer->DrawSolidRect(pRect);
 
 
 	glutSwapBuffers();
@@ -75,6 +79,8 @@ int main(int argc, char **argv)
 		std::cout << "Renderer could not be initialized.. \n";
 	}
 
+	pRect = new CRect(100.f, 0.f, 0.f, 100.f, 1.f, 1.f, 1.f, 0.5f);
+
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
@@ -83,8 +89,8 @@ int main(int argc, char **argv)
 
 	glutMainLoop();
 
+	pRect->Release();
 	delete g_Renderer;
 
     return 0;
 }
-

@@ -158,17 +158,17 @@ GLuint Renderer::CompileShaders(char* filenameVS, char* filenameFS)
 	return ShaderProgram;
 }
 
-void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a)
+void Renderer::DrawSolidRect(CGameObject* pRect)
 {
 	float newX, newY;
-
-	GetGLPosition(x, y, &newX, &newY);
+	
+	GetGLPosition(((CRect*)pRect)->GetX(), ((CRect*)pRect)->GetY(), &newX, &newY);
 
 	//Program select
 	glUseProgram(m_SolidRectShader);
 
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), newX, newY, 0, size);
-	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), r, g, b, a);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), newX, newY, 0, ((CRect*)pRect)->GetSize());
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), ((CRect*)pRect)->GetRed(), ((CRect*)pRect)->GetGreen(), ((CRect*)pRect)->GetBlue(), ((CRect*)pRect)->GetAlpha());
 
 	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
 	glEnableVertexAttribArray(attribPosition);

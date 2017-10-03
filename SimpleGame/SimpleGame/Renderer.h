@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include "GameObject.h"
+#include "Rect.h"
 
 #include "Dependencies\glew.h"
 
@@ -14,8 +16,8 @@ public:
 	~Renderer();
 
 	bool IsInitialized();
-	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
-
+	//void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
+	void DrawSolidRect(CGameObject* pRect);
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
 	bool ReadFile(char* filename, std::string *target);
