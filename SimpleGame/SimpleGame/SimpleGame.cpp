@@ -19,7 +19,8 @@ but WITHOUT ANY WARRANTY.
 #include "Rect.h"
 
 Renderer *g_Renderer = NULL;
-CGameObject* pRect;
+//CGameObject* pRect;
+vector<CGameObject*> v_pRects;
 
 void RenderScene(void)
 {
@@ -27,19 +28,42 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	g_Renderer->DrawSolidRect(pRect);
-
+	//g_Renderer->DrawSolidRect(pRect);
+	for (CGameObject* d : v_pRects)
+	{
+		g_Renderer->DrawSolidRect(d);
+	}
 
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
+	for (CGameObject* d : v_pRects)
+	{
+		d->Update();
+	}
+	//pRect->Update();
+
 	RenderScene();
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
+	int RenderScenex = x - 250;
+	int RenderSceney = (y - 250) * -1;
+	
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		CGameObject* newRect = new CRect(RenderScenex, RenderSceney);
+		((CRect*)newRect)->SetDirection(1.f, 1.f, 0.f);
+		((CRect*)newRect)->SetSpeed(0.1f);
+		
+		v_pRects.push_back(newRect);
+		//((CRect*)pRect)->MovebyMouse(RenderScenex, RenderSceney);
+	}
+
+	printf("x: %d, y: %d\n", RenderScenex, RenderSceney);
 	RenderScene();
 }
 
@@ -79,7 +103,9 @@ int main(int argc, char **argv)
 		std::cout << "Renderer could not be initialized.. \n";
 	}
 
-	pRect = new CRect(100.f, 0.f, 0.f, 100.f, 1.f, 1.f, 1.f, 0.5f);
+	/*pRect = new CRect(100.f, 0.f, 0.f, 100.f, 1.f, 1.f, 1.f, 1.f, 0.5f);
+	((CRect*)pRect)->SetDirection(1.f, 1.f, 0.f);
+	((CRect*)pRect)->SetSpeed(0.1f);*/
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
@@ -89,7 +115,10 @@ int main(int argc, char **argv)
 
 	glutMainLoop();
 
-	pRect->Release();
+	//pRect->Release();
+	for (CGameObject* d : v_pRects)
+		d->Release();
+
 	delete g_Renderer;
 
     return 0;

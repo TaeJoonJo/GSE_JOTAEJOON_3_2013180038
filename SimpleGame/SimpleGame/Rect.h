@@ -4,13 +4,17 @@
 class CRect :public CGameObject
 {
 protected:
+	float m_fxmoved;
+	float m_fymoved;
+	float m_fzmoved;
 public:
 	CRect();
-	CRect(float x, float y, float z, float size, float r, float g, float b, float a);
+	CRect(float x, float y, float z, float size, float speed, float r, float g, float b, float a);
+	CRect(float x, float y);
 	~CRect();
 public:
-	void Render_GameObject();
-	void Update_GameObject();
+	void Render();
+	void Update();
 public:
 	inline float GetX() {
 		return m_fx;
@@ -36,6 +40,18 @@ public:
 	inline float GetAlpha() {
 		return m_falpha;
 	}
+	inline void SetSpeed(float speed) {
+		m_fspeed = speed;
+	}
+	inline void SetDirection(float x, float y, float z)
+	{
+		m_fxmoved = x;
+		m_fymoved = y;
+		m_fzmoved = z;
+	}
+	
+	void MovexybySpeed();
+	void MovebyMouse(int x, int y);
 public:
 	void Release();
 };

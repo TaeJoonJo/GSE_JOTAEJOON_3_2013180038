@@ -7,6 +7,8 @@ protected:
 	float m_fz;
 	float m_fsize;
 
+	float m_fspeed;
+
 	// R G B A
 	float m_fred;
 	float m_fgreen;
@@ -16,8 +18,8 @@ public:
 	CGameObject();
 	~CGameObject();
 public:
-	virtual void Render_GameObject();
-	virtual void Update_GameObject();
+	virtual void Render();
+	virtual void Update();
 public:
 	virtual void Release() = 0;
 };
