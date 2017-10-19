@@ -49,7 +49,11 @@ public:
 		m_fymoved = y;
 		m_fzmoved = z;
 	}
-	
+	inline void SetRandPot() {
+		m_fx = (rand() % 500) - 250.f;
+		m_fy = (rand() % 500) - 250.f;
+	}
+
 	void MovexybySpeed();
 	void MovebyMouse(int x, int y);
 public:

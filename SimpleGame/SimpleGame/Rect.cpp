@@ -5,7 +5,24 @@
 CRect::CRect()
 	: m_fxmoved(0.f), m_fymoved(0.f), m_fzmoved(0.f)
 {
+	m_fx = (rand() % 500) - 250.f;
+	m_fy = (rand() % 500) - 250.f;
+	//m_fspeed = (((rand() % 5) / 10.f) + 0.1f);
+	m_fspeed = 0.1f;
+
+	//m_fsize = (rand() % 50 + 100.f);
 	
+	m_fsize = 10.f;
+
+	m_fred = 1.f;
+	m_fblue = 1.f;
+	m_fgreen = 1.f;
+
+	/*m_fred = (rand() % 10) * 0.1f;
+	m_fgreen = (rand() % 10) * 0.1f;
+	m_fblue = (rand() % 10) * 0.1f;*/
+
+	m_falpha = (rand() % 10) * 0.1f;
 }
 
 CRect::CRect(float x, float y, float z, float size, float speed, float r, float g, float b, float a)

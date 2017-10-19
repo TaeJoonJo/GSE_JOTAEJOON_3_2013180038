@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <stdlib.h>
+#include <ctime>
 
-#include <vector>
-
-using namespace std;
+#define MAX_ObJECTS_COUNT 10

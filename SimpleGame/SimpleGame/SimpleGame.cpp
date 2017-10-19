@@ -14,13 +14,13 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\freeglut.h"
 
 #include "Renderer.h"
+#include "SceneMgr.h"
 
 #include "GameObject.h"
 #include "Rect.h"
 
 Renderer *g_Renderer = NULL;
-//CGameObject* pRect;
-vector<CGameObject*> v_pRects;
+CSceneMgr* g_Scene = NULL;
 
 void RenderScene(void)
 {
@@ -29,9 +29,9 @@ void RenderScene(void)
 
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(pRect);
-	for (CGameObject* d : v_pRects)
+	for(int i = 0; i < MAX_ObJECTS_COUNT; ++i)
 	{
-		g_Renderer->DrawSolidRect(d);
+		g_Renderer->DrawSolidRect(g_Scene->Get_Object(i));
 	}
 
 	glutSwapBuffers();
@@ -39,11 +39,7 @@ void RenderScene(void)
 
 void Idle(void)
 {
-	for (CGameObject* d : v_pRects)
-	{
-		d->Update();
-	}
-	//pRect->Update();
+	g_Scene->Update_Objects();
 
 	RenderScene();
 }
@@ -55,12 +51,10 @@ void MouseInput(int button, int state, int x, int y)
 	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		CGameObject* newRect = new CRect(RenderScenex, RenderSceney);
+		/*CGameObject* newRect = new CRect(RenderScenex, RenderSceney);
 		((CRect*)newRect)->SetDirection(1.f, 1.f, 0.f);
-		((CRect*)newRect)->SetSpeed(0.1f);
+		((CRect*)newRect)->SetSpeed(0.1f);*/
 		
-		v_pRects.push_back(newRect);
-		//((CRect*)pRect)->MovebyMouse(RenderScenex, RenderSceney);
 	}
 
 	printf("x: %d, y: %d\n", RenderScenex, RenderSceney);
@@ -95,6 +89,8 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
+	g_Scene = new CSceneMgr;
+	g_Scene->Ready_Objects();
 
 	// Initialize Renderer
 	g_Renderer = new Renderer(500, 500);
@@ -102,7 +98,6 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}
-
 	/*pRect = new CRect(100.f, 0.f, 0.f, 100.f, 1.f, 1.f, 1.f, 1.f, 0.5f);
 	((CRect*)pRect)->SetDirection(1.f, 1.f, 0.f);
 	((CRect*)pRect)->SetSpeed(0.1f);*/
@@ -115,10 +110,7 @@ int main(int argc, char **argv)
 
 	glutMainLoop();
 
-	//pRect->Release();
-	for (CGameObject* d : v_pRects)
-		d->Release();
-
+	delete g_Scene;
 	delete g_Renderer;
 
     return 0;
