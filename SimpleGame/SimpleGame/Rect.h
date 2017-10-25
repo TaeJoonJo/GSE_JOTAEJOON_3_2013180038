@@ -1,6 +1,7 @@
+#pragma once
+
 #include "GameObject.h"
 
-#pragma once
 class CRect :public CGameObject
 {
 protected:
@@ -49,9 +50,9 @@ public:
 		m_fymoved = y;
 		m_fzmoved = z;
 	}
-	inline void SetRandPot() {
-		m_fx = (rand() % 500) - 250.f;
-		m_fy = (rand() % 500) - 250.f;
+	inline void Colide() {
+		m_fxmoved *= -1.f;
+		m_fymoved *= -1.f;
 	}
 
 	void MovexybySpeed();

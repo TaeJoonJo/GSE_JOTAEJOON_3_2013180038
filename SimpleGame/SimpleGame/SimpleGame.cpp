@@ -28,8 +28,12 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	//g_Renderer->DrawSolidRect(pRect);
-	for(int i = 0; i < MAX_ObJECTS_COUNT; ++i)
+	/*for(int i = 0; i < MAX_ObJECTS_COUNT; ++i)
+	{
+		g_Renderer->DrawSolidRect(g_Scene->Get_Object(i));
+	}*/
+
+	for (int i = 0; i < MAX_ObJECTS_COUNT; ++i)
 	{
 		g_Renderer->DrawSolidRect(g_Scene->Get_Object(i));
 	}
@@ -73,6 +77,8 @@ void SpecialKeyInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	srand((unsigned)time(NULL));
+
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -98,9 +104,6 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}
-	/*pRect = new CRect(100.f, 0.f, 0.f, 100.f, 1.f, 1.f, 1.f, 1.f, 0.5f);
-	((CRect*)pRect)->SetDirection(1.f, 1.f, 0.f);
-	((CRect*)pRect)->SetSpeed(0.1f);*/
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);

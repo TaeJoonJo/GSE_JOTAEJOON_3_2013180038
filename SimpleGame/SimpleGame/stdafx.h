@@ -6,5 +6,9 @@
 #include <tchar.h>
 #include <stdlib.h>
 #include <ctime>
+#include <random>
 
-#define MAX_ObJECTS_COUNT 10
+#include <vector>
+
+#define MAX_ObJECTS_COUNT 50
+
