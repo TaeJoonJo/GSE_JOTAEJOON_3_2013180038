@@ -19,31 +19,30 @@ but WITHOUT ANY WARRANTY.
 #include "GameObject.h"
 #include "Rect.h"
 
-Renderer *g_Renderer = NULL;
+//Renderer *g_Renderer = NULL;
 CSceneMgr* g_Scene = NULL;
+
+DWORD g_prevTime = 0;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-	// Renderer Test
-	/*for(int i = 0; i < MAX_ObJECTS_COUNT; ++i)
-	{
-		g_Renderer->DrawSolidRect(g_Scene->Get_Object(i));
-	}*/
-
-	for (int i = 0; i < MAX_ObJECTS_COUNT; ++i)
-	{
-		g_Renderer->DrawSolidRect(g_Scene->Get_Object(i));
-	}
+	g_Scene->Draw_Objects();
 
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
-	g_Scene->Update_Objects();
+	//float ftime = timeGetTime();
+
+	DWORD currTime = timeGetTime();
+	DWORD elapsedTime = currTime - g_prevTime;
+	g_prevTime = currTime;
+
+	g_Scene->Update_Objects((float)elapsedTime);
 
 	RenderScene();
 }
@@ -55,10 +54,7 @@ void MouseInput(int button, int state, int x, int y)
 	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		/*CGameObject* newRect = new CRect(RenderScenex, RenderSceney);
-		((CRect*)newRect)->SetDirection(1.f, 1.f, 0.f);
-		((CRect*)newRect)->SetSpeed(0.1f);*/
-		
+		g_Scene->Add_Object(RenderScenex, RenderSceney, 1000.f);
 	}
 
 	printf("x: %d, y: %d\n", RenderScenex, RenderSceney);
@@ -96,14 +92,11 @@ int main(int argc, char **argv)
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
 	g_Scene = new CSceneMgr;
-	g_Scene->Ready_Objects();
-
+	if (!g_Scene->Ready_Renderer())
+		std::cout << "렌더러 오류" << std::endl;
+	if(!g_Scene->Ready_Objects())
+		std::cout << "오브젝트 오류" << std::endl;
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
-	if (!g_Renderer->IsInitialized())
-	{
-		std::cout << "Renderer could not be initialized.. \n";
-	}
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
@@ -114,7 +107,6 @@ int main(int argc, char **argv)
 	glutMainLoop();
 
 	delete g_Scene;
-	delete g_Renderer;
 
     return 0;
 }

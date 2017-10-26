@@ -3,6 +3,8 @@
 class CGameObject
 {
 protected:
+	float m_flifetime;
+
 	float m_fx;
 	float m_fy;
 	float m_fz;
