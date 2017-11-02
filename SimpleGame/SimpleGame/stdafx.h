@@ -12,7 +12,7 @@
 #include <vector>
 #include <iterator>
 
-#define MAX_ObJECTS_COUNT 10
-#define RECT_SPEED 0.5f
+#include "Defines.h"
 
 using namespace std;
+

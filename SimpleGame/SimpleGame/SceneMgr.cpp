@@ -26,32 +26,22 @@ bool CSceneMgr::Ready_Renderer()
 	if (!g_Renderer->IsInitialized())
 		return false;
 
+	if (!Ready_Objects())
+		std::cout << "오브젝트 오류" << std::endl;
 
 	return true;
 }
 
 bool CSceneMgr::Ready_Objects()
 {
-	/*for(int i = 0; i < MAX_ObJECTS_COUNT; ++i)
-	{ 
-		CGameObject* nRect = new CRect;
-		((CRect*)nRect)->SetDirection(RandDir(), RandDir(), 0.f);
-
-		m_vGameObjects.push_back(nRect);
-	}
-
-	if (m_vGameObjects.size() != MAX_ObJECTS_COUNT)
-		return false;*/
+	CGameObject* pBuilding = new CRect(0.f, 0.f, OBJECT_BULLET);
+	m_vGameObjects.push_back(pBuilding);
 
 	return true;
 }
 
 void CSceneMgr::Update_Objects(float time)
 {
-	/*time -= m_ftime;
-	float framepertime = time * 0.001f;
-	m_ftime = time;*/
-
 	/*for (auto iter = m_vGameObjects.begin(); iter != m_vGameObjects.end();)
 	{
 		if (((CRect*)(*iter))->GetLifetime() <= 0)
@@ -74,7 +64,6 @@ void CSceneMgr::Update_Objects(float time)
 			{
 				((CRect *)m_vGameObjects[i])->Colide(true);
 				((CRect *)m_vGameObjects[j])->Colide(true);
-				break;
 			}
 			else
 			{
@@ -99,11 +88,26 @@ void CSceneMgr::Draw_Objects()
 	}
 }
 
-void CSceneMgr::Add_Object(float x, float y, float lifetime)
+//void CSceneMgr::Add_Object(float x, float y, float lifetime)
+//{
+//	if (m_vGameObjects.size() < MAX_ObJECTS_COUNT)
+//	{
+//		CGameObject* nRect = new CRect(x, y, lifetime);
+//		((CRect *)nRect)->SetDirection(1.f, 1.f, 0.f);
+//
+//		m_vGameObjects.push_back(nRect);
+//	}
+//	else
+//	{
+//		printf("MAX COUNT OBJECT OVER\n");
+//	}
+//}
+
+void CSceneMgr::Add_Object(float x, float y, int type)
 {
 	if (m_vGameObjects.size() < MAX_ObJECTS_COUNT)
 	{
-		CGameObject* nRect = new CRect(x, y, lifetime);
+		CGameObject* nRect = new CRect(x, y, (int)type);
 		((CRect *)nRect)->SetDirection(1.f, 1.f, 0.f);
 
 		m_vGameObjects.push_back(nRect);

@@ -54,7 +54,7 @@ void MouseInput(int button, int state, int x, int y)
 	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		g_Scene->Add_Object(RenderScenex, RenderSceney, 1000.f);
+		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER);
 	}
 
 	printf("x: %d, y: %d\n", RenderScenex, RenderSceney);
@@ -94,9 +94,6 @@ int main(int argc, char **argv)
 	g_Scene = new CSceneMgr;
 	if (!g_Scene->Ready_Renderer())
 		std::cout << "렌더러 오류" << std::endl;
-	if(!g_Scene->Ready_Objects())
-		std::cout << "오브젝트 오류" << std::endl;
-	// Initialize Renderer
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);

@@ -23,5 +23,6 @@ public:
 	inline CGameObject* Get_Object(int index) {
 		return (m_vGameObjects[index]);
 	}
-	void Add_Object(float x, float y, float lifetime);
+	//void Add_Object(float x, float y, float lifetime);
+	void Add_Object(float x, float y, int type);
 };
