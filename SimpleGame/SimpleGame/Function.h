@@ -39,6 +39,19 @@ inline float GetRandom(float min, float max)
 	std::random_device rd;
 	std::mt19937 rEngine(rd());
 	std::uniform_real_distribution<> dist(min, max);
+
 	return static_cast<float>(dist(rEngine));
 }
 
+inline float GetRandomExceptZero(float min, float max)
+{
+	std::random_device rd;
+	std::mt19937 rEngine(rd());
+	std::uniform_real_distribution<> dist(min, max);
+
+	float temp = 0.f;
+	while (temp == 0.f)
+		temp = dist(rEngine);
+
+	return static_cast<float>(temp);
+}

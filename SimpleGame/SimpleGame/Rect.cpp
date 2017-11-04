@@ -20,44 +20,6 @@ CRect::CRect()
 
 	m_falpha = GetRandom(0.1f, 1.f);
 }
-//
-//CRect::CRect(float x, float y, float z, float size, float speed, float r, float g, float b, float a)
-//	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(0.f),
-//	m_fsmoved(1.f)
-//{
-//	m_fx = x;
-//	m_fy = y;
-//	m_fz = z;
-//
-//	m_fsize = size;
-//	m_foriginsize = m_fsize;
-//
-//	m_fspeed = speed;
-//
-//	m_fred = r;
-//	m_fgreen = g;
-//	m_fblue = b;
-//	m_falpha = a;
-//}
-//CRect::CRect(float x, float y, float lifetime) 
-//	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(0.f),
-//	m_fsmoved(1.f)
-//{
-//	m_fx = x;
-//	m_fy = y;
-//
-//	m_flifetime = lifetime;
-//
-//	m_fspeed = RECT_SPEED;
-//
-//	m_fsize = 10.f;
-//	m_foriginsize = m_fsize;
-//
-//	m_fred = (rand() % 10) * 0.1f;
-//	m_fgreen = (rand() % 10) * 0.1f;
-//	m_fblue = (rand() % 10) * 0.1f;
-//	m_falpha = (rand() % 10) * 0.1f;
-//}
 
 CRect::CRect(float x, float y, int type)
 	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(0.f),
@@ -71,7 +33,7 @@ CRect::CRect(float x, float y, int type)
 
 	if (m_ntype == OBJECT_CHARACTER)
 	{
-		m_flifetime = 10.f;
+		m_flife = 10.f;
 		m_fspeed = 300.f;
 		m_fsize = 10.f;
 		m_fred = 1.f;
@@ -81,7 +43,7 @@ CRect::CRect(float x, float y, int type)
 	}
 	else if (m_ntype == OBJECT_BUILDING)
 	{
-		m_flifetime = 500.f;
+		m_flife = 500.f;
 		m_fspeed = 0.f;
 		m_fsize = 50.f;
 		m_fred = 1.f;
@@ -91,9 +53,9 @@ CRect::CRect(float x, float y, int type)
 	}
 	else if (m_ntype == OBJECT_BULLET)
 	{
-		m_flifetime = 20.f;
+		m_flife = 20.f;
 		m_fspeed = 300.f;
-		m_fsize = 20.f;
+		m_fsize = 5.f;
 		m_fred = 1.f;
 		m_fblue = 0.f;
 		m_fgreen = 0.f;
@@ -101,14 +63,16 @@ CRect::CRect(float x, float y, int type)
 	}
 	else if (m_ntype == OBJECT_ARROW)
 	{
-		m_flifetime = 10.f;
+		m_flife = 10.f;
 		m_fspeed = 100.f;	
-		m_fsize = 20.f;
+		m_fsize = 5.f;
 		m_fred = 0.f;
 		m_fblue = 0.f;
 		m_fgreen = 0.5f;
 		m_falpha = 1.f;
 	}
+
+	m_flifetime = 1000.f;
 
 	m_foriginsize = m_fsize;
 }
@@ -124,7 +88,10 @@ void CRect::Render()
 
 void CRect::Update(float time)
 {
-	float temptime = time / 1000.f;
+	if (m_ntype == OBJECT_CHARACTER && m_isColied)
+		SetColor(1.f, 0.f, 0.f, 1.f);
+	else if (m_ntype == OBJECT_CHARACTER)
+		SetColor(1.f, 1.f, 1.f, 1.f);
 
 	if (((m_fx + (m_fsize * 0.5f)) <= -250.f) || ((m_fx - (m_fsize * 0.5f)) >= 250.f))
 		m_fxmoved *= -1.f;
@@ -137,12 +104,17 @@ void CRect::Update(float time)
 	if(m_foriginsize - fhoriginsize > m_fsize)
 		m_fsmoved *= -1.f;
 
-	//m_fsize += 1.f * m_fsmoved * temptime;
-	//m_flifetime -= temptime;
+	if(m_ntype == OBJECT_CHARACTER)
+		m_fsize += fhoriginsize * 0.1f * m_fsmoved;
 
-	printf("life: %d\n", m_flifetime);
+	if(m_flifetime > 0.f)
+		m_flifetime -= 0.5f;
 
-	MovexybySpeed(temptime);
+	//printf("life: %f\n", temptime);
+	if (m_ntype == OBJECT_BUILDING)
+		printf("life : %f\n", m_flife);
+
+	MovexybySpeed(time);
 }
 
 void CRect::MovexybySpeed(float time)

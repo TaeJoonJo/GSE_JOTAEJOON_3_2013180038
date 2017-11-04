@@ -11,6 +11,8 @@ protected:
 	std::vector<CGameObject*> m_vGameObjects;
 
 	float m_ftime;
+
+	float m_fBulletTimer;
 public:
 	CSceneMgr();
 	~CSceneMgr();
@@ -23,6 +25,5 @@ public:
 	inline CGameObject* Get_Object(int index) {
 		return (m_vGameObjects[index]);
 	}
-	//void Add_Object(float x, float y, float lifetime);
 	void Add_Object(float x, float y, int type);
 };

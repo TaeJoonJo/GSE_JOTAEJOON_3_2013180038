@@ -29,6 +29,11 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
+	DWORD currTime = timeGetTime();
+	DWORD elapsedTime = currTime - g_prevTime;
+	g_prevTime = currTime;
+
+	g_Scene->Update_Objects((float)elapsedTime);
 	g_Scene->Draw_Objects();
 
 	glutSwapBuffers();
@@ -38,11 +43,7 @@ void Idle(void)
 {
 	//float ftime = timeGetTime();
 
-	DWORD currTime = timeGetTime();
-	DWORD elapsedTime = currTime - g_prevTime;
-	g_prevTime = currTime;
-
-	g_Scene->Update_Objects((float)elapsedTime);
+	
 
 	RenderScene();
 }
@@ -56,8 +57,11 @@ void MouseInput(int button, int state, int x, int y)
 	{
 		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER);
 	}
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+	{
+		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_BUILDING);
+	}
 
-	printf("x: %d, y: %d\n", RenderScenex, RenderSceney);
 	RenderScene();
 }
 

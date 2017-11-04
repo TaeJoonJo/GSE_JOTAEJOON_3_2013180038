@@ -33,26 +33,9 @@ public:
 		m_fymoved = y;
 		m_fzmoved = z;
 	}
-	inline void Colide(bool iscolied) {
-		/*m_fxmoved *= -1.f;
-		m_fymoved *= -1.f;*/
-		if (iscolied)
-		{
-			m_fred = 1.f;
-			m_fblue = 0.f;
-			m_fgreen = 0.f;
-		}
-		if (!iscolied)
-		{
-			m_fred = 1.f;
-			m_fblue = 1.f;
-			m_fgreen = 1.f;
-		}
-	}
 
 	void MovexybySpeed(float time);
 	void MovebyMouse(int x, int y);
 public:
 	void Release();
 };
-

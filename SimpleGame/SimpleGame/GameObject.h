@@ -4,6 +4,7 @@ class CGameObject
 {
 protected:
 	float m_flifetime;
+	float m_flife;
 
 	float m_fx;
 	float m_fy;
@@ -19,6 +20,8 @@ protected:
 	float m_falpha;
 
 	int m_ntype;
+public:
+	bool m_isColied;
 public:
 	CGameObject();
 	~CGameObject();
@@ -50,13 +53,37 @@ public:
 	inline float GetAlpha() {
 		return m_falpha;
 	}
-
-	inline void SetColor(float r, float g, float b, float a) {
-		m_fred = r;
-		m_fblue = b;
-		m_fgreen = g;
-		m_falpha = a;
+	inline float GetLife() {
+		return m_flife;
 	}
+	inline float GetLifetime() {
+		return m_flifetime;
+	}
+	inline int GetType() {
+		return m_ntype;
+	}
+
+	inline void SetPosition(float x, float y, float z) {
+		m_fx = x; m_fy = y; m_fz = z;
+	}
+	inline void SetColor(float r, float g, float b, float a) {
+		m_fred = r; m_fgreen = g; m_fblue = b; m_falpha = a;
+	}
+	inline void SetLife(float life) {
+		m_flife = life;
+	}
+	inline void SetLifetime(float lifetime) {
+		m_flifetime = lifetime;
+	}
+	inline void Attacked(float damage) {
+		if(m_flife > 0.f) m_flife -= damage;
+	}
+	inline float Attack() {
+		float temp = m_flife;
+		m_flife = 0.f;
+		return temp;
+	}
+	
 public:
 	virtual void Release() = 0;
 };
