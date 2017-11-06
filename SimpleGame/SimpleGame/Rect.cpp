@@ -31,6 +31,9 @@ CRect::CRect(float x, float y, int type)
 
 	m_ntype = type;
 
+	m_fcolidetimer = 0.f;
+	m_isColied = false;
+
 	if (m_ntype == OBJECT_CHARACTER)
 	{
 		m_flife = 10.f;
@@ -55,7 +58,7 @@ CRect::CRect(float x, float y, int type)
 	{
 		m_flife = 20.f;
 		m_fspeed = 300.f;
-		m_fsize = 5.f;
+		m_fsize = 2.f;
 		m_fred = 1.f;
 		m_fblue = 0.f;
 		m_fgreen = 0.f;
@@ -65,14 +68,14 @@ CRect::CRect(float x, float y, int type)
 	{
 		m_flife = 10.f;
 		m_fspeed = 100.f;	
-		m_fsize = 5.f;
+		m_fsize = 2.f;
 		m_fred = 0.f;
 		m_fblue = 0.f;
 		m_fgreen = 0.5f;
 		m_falpha = 1.f;
 	}
 
-	m_flifetime = 1000.f;
+	m_flifetime = 100.f;
 
 	m_foriginsize = m_fsize;
 }
@@ -88,10 +91,34 @@ void CRect::Render()
 
 void CRect::Update(float time)
 {
-	if (m_ntype == OBJECT_CHARACTER && m_isColied)
-		SetColor(1.f, 0.f, 0.f, 1.f);
-	else if (m_ntype == OBJECT_CHARACTER)
-		SetColor(1.f, 1.f, 1.f, 1.f);
+	if (m_ntype == OBJECT_CHARACTER)
+	{
+		if (m_isColied)
+		{
+			if ((m_fcolidetimer += time) > 0.3f)
+			{
+				SetColor(1.f, 1.f, 1.f, 1.f);
+				m_isColied = false;
+				m_fcolidetimer = 0.f;
+			}
+			else
+				SetColor(1.0f, 0.f, 1.f, 1.f);
+		}
+	}
+	else if (m_ntype == OBJECT_BUILDING)
+	{
+		if (m_isColied)
+		{
+			if ((m_fcolidetimer += time) > 1.f)
+			{
+				SetColor(1.f, 1.f, 0.f, 1.f);
+				m_isColied = false;
+				m_fcolidetimer = 0.f;
+			}
+			else
+				SetColor(1.f, 0.f, 0.4f, 1.f);
+		}
+	}
 
 	if (((m_fx + (m_fsize * 0.5f)) <= -250.f) || ((m_fx - (m_fsize * 0.5f)) >= 250.f))
 		m_fxmoved *= -1.f;
@@ -105,10 +132,10 @@ void CRect::Update(float time)
 		m_fsmoved *= -1.f;
 
 	if(m_ntype == OBJECT_CHARACTER)
-		m_fsize += fhoriginsize * 0.1f * m_fsmoved;
+		m_fsize += fhoriginsize * m_fsmoved * time;
 
 	if(m_flifetime > 0.f)
-		m_flifetime -= 0.5f;
+		m_flifetime -= 0.5f * time;
 
 	//printf("life: %f\n", temptime);
 	if (m_ntype == OBJECT_BUILDING)

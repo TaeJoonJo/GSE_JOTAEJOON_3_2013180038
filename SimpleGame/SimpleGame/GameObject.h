@@ -20,6 +20,8 @@ protected:
 	float m_falpha;
 
 	int m_ntype;
+
+	float m_fcolidetimer;
 public:
 	bool m_isColied;
 public:
@@ -75,12 +77,14 @@ public:
 	inline void SetLifetime(float lifetime) {
 		m_flifetime = lifetime;
 	}
-	inline void Attacked(float damage) {
+	inline void Attacked(float damage = 0.f) {
 		if(m_flife > 0.f) m_flife -= damage;
+		m_isColied = true;
 	}
 	inline float Attack() {
 		float temp = m_flife;
 		m_flife = 0.f;
+		m_isColied = true;
 		return temp;
 	}
 	

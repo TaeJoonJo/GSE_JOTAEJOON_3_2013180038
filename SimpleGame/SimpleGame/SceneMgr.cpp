@@ -91,8 +91,8 @@ void CSceneMgr::Update_Objects(float time)
 				{
 					//((CRect *)m_vGameObjects[i])->SetColor(1.f, 0.f, 0.f, 1.f);
 					//((CRect *)m_vGameObjects[j])->SetColor(1.f, 0.f, 0.f, 1.f);
-					m_vGameObjects[i]->m_isColied = true;
-					m_vGameObjects[j]->m_isColied = true;
+					m_vGameObjects[i]->Attacked();
+					m_vGameObjects[j]->Attacked();
 				}
 				// 빌딩과 캐릭터간의 충돌
 				if (itype == OBJECT_BUILDING && jtype == OBJECT_CHARACTER)
@@ -105,8 +105,6 @@ void CSceneMgr::Update_Objects(float time)
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
 				}
 			}
-			else if (m_vGameObjects[j]->GetType() == OBJECT_CHARACTER)
-				m_vGameObjects[j]->m_isColied = false;
 		}
 	}
 
