@@ -9,3 +9,5 @@
 #define RECT_SPEED 0.5f
 
 #define RAND_FLOAT ((((float)(rand() % 20) - 10.f) * 0.1f))
+
+#define VECTORITERATOR std::vector<CGameObject*>::iterator

@@ -15,7 +15,7 @@ void CGameObject::Render()
 
 }
 
-void CGameObject::Update()
+void CGameObject::Update(float time)
 {
 
 }

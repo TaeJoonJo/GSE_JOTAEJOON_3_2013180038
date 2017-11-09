@@ -19,7 +19,6 @@ but WITHOUT ANY WARRANTY.
 #include "GameObject.h"
 #include "Rect.h"
 
-//Renderer *g_Renderer = NULL;
 CSceneMgr* g_Scene = NULL;
 
 DWORD g_prevTime = 0;
@@ -41,10 +40,6 @@ void RenderScene(void)
 
 void Idle(void)
 {
-	//float ftime = timeGetTime();
-
-	
-
 	RenderScene();
 }
 

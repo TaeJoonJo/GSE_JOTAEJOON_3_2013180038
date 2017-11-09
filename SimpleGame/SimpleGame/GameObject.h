@@ -21,6 +21,11 @@ protected:
 
 	int m_ntype;
 
+	// ½Äº°ÀÚ
+	int m_nId;
+
+	unsigned int m_ntexID;
+
 	float m_fcolidetimer;
 public:
 	bool m_isColied;
@@ -29,7 +34,7 @@ public:
 	~CGameObject();
 public:
 	virtual void Render();
-	virtual void Update();
+	virtual void Update(float time);
 
 	inline float GetX() {
 		return m_fx;
@@ -64,6 +69,12 @@ public:
 	inline int GetType() {
 		return m_ntype;
 	}
+	inline int GetID() {
+		return m_nId;
+	}
+	inline unsigned int GettexID() {
+		return m_ntexID;
+	}
 
 	inline void SetPosition(float x, float y, float z) {
 		m_fx = x; m_fy = y; m_fz = z;
@@ -76,6 +87,12 @@ public:
 	}
 	inline void SetLifetime(float lifetime) {
 		m_flifetime = lifetime;
+	}
+	inline void SetId(int id) {
+		m_nId = id;
+	}
+	inline void SettexID(unsigned int texid) {
+		m_ntexID = texid;
 	}
 	inline void Attacked(float damage = 0.f) {
 		if(m_flife > 0.f) m_flife -= damage;

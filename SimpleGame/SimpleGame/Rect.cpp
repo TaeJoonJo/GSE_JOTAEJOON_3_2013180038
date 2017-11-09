@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Rect.h"
 #include "Function.h"
+//#include "SceneMgr.h"
 
 CRect::CRect()
 	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(1.f),
@@ -31,8 +32,13 @@ CRect::CRect(float x, float y, int type)
 
 	m_ntype = type;
 
+	m_nId = 0;
+	m_ntexID = 0;
+
 	m_fcolidetimer = 0.f;
 	m_isColied = false;
+
+	m_fshoottimer = 0.f;
 
 	if (m_ntype == OBJECT_CHARACTER)
 	{
@@ -43,6 +49,7 @@ CRect::CRect(float x, float y, int type)
 		m_fblue = 1.f;
 		m_fgreen = 1.f;
 		m_falpha = 1.f;
+		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Planet.png");
 	}
 	else if (m_ntype == OBJECT_BUILDING)
 	{
@@ -53,6 +60,7 @@ CRect::CRect(float x, float y, int type)
 		m_fblue = 0.f;
 		m_fgreen = 1.f;
 		m_falpha = 1.f;
+		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Moon.png");
 	}
 	else if (m_ntype == OBJECT_BULLET)
 	{
@@ -104,6 +112,11 @@ void CRect::Update(float time)
 			else
 				SetColor(1.0f, 0.f, 1.f, 1.f);
 		}
+		if ((m_fshoottimer += time) > 0.5f)
+		{
+			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_ARROW, m_nId);
+			m_fshoottimer = 0.f;
+		}
 	}
 	else if (m_ntype == OBJECT_BUILDING)
 	{
@@ -117,6 +130,11 @@ void CRect::Update(float time)
 			}
 			else
 				SetColor(1.f, 0.f, 0.4f, 1.f);
+		}
+		if ((m_fshoottimer += time) > 0.5f)
+		{
+			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_BULLET, m_nId);
+			m_fshoottimer = 0.f;
 		}
 	}
 
