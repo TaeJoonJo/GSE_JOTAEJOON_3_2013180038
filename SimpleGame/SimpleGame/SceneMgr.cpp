@@ -58,7 +58,7 @@ void CSceneMgr::Update_Objects(float time)
 	{
 		if (((*iter)->GetLifetime() <= 0) || ((*iter)->GetLife() <= 0))
 		{
-			if ((*iter)->GetType() == OBJECT_CHARACTER)
+			if ((*iter)->GetType() == OBJECT_CHARACTER || (*iter)->GetType() == OBJECT_BUILDING)
 			{
 				int charid = (*iter)->GetID();
 				for (VECTORITERATOR biter = iter; biter != m_vGameObjects.end();)
