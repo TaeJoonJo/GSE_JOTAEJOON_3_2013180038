@@ -1,5 +1,11 @@
 #pragma once
 
+#define WINSIZEX 500.f
+#define WINSIZEY 700.f
+
+#define WINHALFSIZEX WINSIZEX * 0.5f
+#define WINHALFSIZEY WINSIZEY * 0.5f
+
 #define OBJECT_CHARACTER 0
 #define OBJECT_BUILDING 1
 #define OBJECT_BULLET 10
@@ -7,6 +13,9 @@
 
 #define MAX_ObJECTS_COUNT 1000
 #define RECT_SPEED 0.5f
+
+#define TEAMBLUE 2
+#define TEAMRED 1
 
 #define RAND_FLOAT ((((float)(rand() % 20) - 10.f) * 0.1f))
 

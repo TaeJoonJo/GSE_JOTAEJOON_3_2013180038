@@ -12,12 +12,13 @@ protected:
 
 	static vector<CGameObject*> m_vGameObjects;
 
-	float m_fBulletTimer;
+	float m_fRedCharacterTimer;
 
 	static int m_nobjectId;
 
 	unsigned int m_nchartexId;
-	unsigned int m_nbuildingtexId;
+	unsigned int m_nredbuildingtexId;
+	unsigned int m_nbluebuildingtexId;
 public:
 	CSceneMgr();
 	~CSceneMgr();
@@ -34,6 +35,6 @@ public:
 	inline CGameObject* Get_Object(int index) {
 		return (m_vGameObjects[index]);
 	}
-	void Add_Object(float x, float y, int type);
-	static void Add_Object(float x, float y, int type, int id);
+	void Add_Object(float x, float y, int type, int team);
+	static void Add_Object(float x, float y, int type, int id, int team);
 };

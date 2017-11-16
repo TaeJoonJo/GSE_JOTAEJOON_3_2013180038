@@ -23,6 +23,13 @@ CSceneMgr* g_Scene = NULL;
 
 DWORD g_prevTime = 0;
 
+bool isLeft = false;
+
+bool isEnableChar = true;
+float g_fCharCooltime = 0.f;
+
+void CoolTime(float time);
+
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -31,6 +38,8 @@ void RenderScene(void)
 	DWORD currTime = timeGetTime();
 	DWORD elapsedTime = currTime - g_prevTime;
 	g_prevTime = currTime;
+
+	CoolTime((float)elapsedTime);
 
 	g_Scene->Update_Objects((float)elapsedTime);
 	g_Scene->Draw_Objects();
@@ -45,16 +54,41 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
-	int RenderScenex = x - 250;
-	int RenderSceney = (y - 250) * -1;
+	int RenderScenex = x - WINHALFSIZEX;
+	int RenderSceney = -(y - WINHALFSIZEY);
 	
+	//printf("x : %d, y : %d\n", RenderScenex, RenderSceney);
+
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER);
+		isLeft = true;
+	}
+	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		if (isLeft)
+		{
+			if (isEnableChar)
+			{
+				if (RenderSceney <= 0.f)
+				{
+					g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER, TEAMBLUE);
+					isEnableChar = false;
+				}
+				else
+				{
+					printf("Character Only North\n");
+				}
+			}
+			else
+			{
+				printf("Character is Cooltime!\n");
+			}
+		}
+
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_BUILDING);
+		g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER, TEAMRED);
 	}
 
 	RenderScene();
@@ -78,7 +112,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(WINSIZEX, WINSIZEY);
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();
@@ -105,4 +139,19 @@ int main(int argc, char **argv)
 	delete g_Scene;
 
     return 0;
+}
+
+void CoolTime(float time)
+{
+	float elapedtime = time * 0.001f;
+
+	if (!isEnableChar)
+	{
+		//printf("Char CoolTime : %d\n", g_fCharCooltime);
+		if ((g_fCharCooltime += elapedtime) >= 7.f)
+		{
+			g_fCharCooltime = 0.f;
+			isEnableChar = true;
+		}
+	}
 }

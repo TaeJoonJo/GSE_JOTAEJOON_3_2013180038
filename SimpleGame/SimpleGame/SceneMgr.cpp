@@ -9,7 +9,8 @@ vector<CGameObject*> CSceneMgr::m_vGameObjects = vector<CGameObject*>();
 int CSceneMgr::m_nobjectId = 0;
 
 CSceneMgr::CSceneMgr()
-	:m_nbuildingtexId(0), m_nchartexId(0)
+	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nchartexId(0),
+	m_fRedCharacterTimer(0.f)
 {
 	//m_ftime = timeGetTime();
 }
@@ -25,7 +26,7 @@ CSceneMgr::~CSceneMgr()
 
 bool CSceneMgr::Ready_Renderer()
 {
-	g_Renderer = new Renderer(500, 500);
+	g_Renderer = new Renderer(WINSIZEX, WINSIZEY);
 	if (!g_Renderer->IsInitialized())
 		return false;
 
@@ -40,9 +41,16 @@ bool CSceneMgr::Ready_Renderer()
 bool CSceneMgr::Ready_Objects()
 {
 	m_nchartexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
-	m_nbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
+	m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
+	m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
 
-	Add_Object(0.f, 0.f, OBJECT_BUILDING);
+	Add_Object(-200.f, WINHALFSIZEY - 100.f, OBJECT_BUILDING, TEAMRED);
+	Add_Object(0.f, WINHALFSIZEY - 100.f, OBJECT_BUILDING, TEAMRED);
+	Add_Object(200.f, WINHALFSIZEY - 100.f, OBJECT_BUILDING, TEAMRED);
+
+	Add_Object(-200.f, -WINHALFSIZEY + 100.f, OBJECT_BUILDING, TEAMBLUE);
+	Add_Object(0.f, -WINHALFSIZEY + 100.f, OBJECT_BUILDING, TEAMBLUE);
+	Add_Object(200.f, -WINHALFSIZEY + 100.f, OBJECT_BUILDING, TEAMBLUE);
 
 	return true;
 }
@@ -52,6 +60,13 @@ void CSceneMgr::Update_Objects(float time)
 	float elsapedtime = time * 0.001f;
 	if (elsapedtime > 10.f)
 		elsapedtime = 10.f;
+
+	if ((m_fRedCharacterTimer += elsapedtime) > 5.f)
+	{
+		Add_Object(GetRandom(-WINHALFSIZEX, WINHALFSIZEX), GetRandom(0.f, WINHALFSIZEY), OBJECT_CHARACTER, TEAMRED);
+
+		m_fRedCharacterTimer = 0.f;
+	}
 
 	// Delete
 	for (VECTORITERATOR iter = m_vGameObjects.begin(); iter != m_vGameObjects.end();)
@@ -94,7 +109,10 @@ void CSceneMgr::Update_Objects(float time)
 	{
 		for (int j = 0; j < m_vGameObjects.size(); ++j)
 		{
-			if (CollisionRect(m_vGameObjects[i], m_vGameObjects[j]) && i != j)
+			int iteam = m_vGameObjects[i]->GetTeam();
+			int jteam = m_vGameObjects[j]->GetTeam();
+			if (CollisionRect(m_vGameObjects[i], m_vGameObjects[j]) &&
+				i != j && iteam != jteam)
 			{
 				int itype = m_vGameObjects[i]->GetType();
 				int jtype = m_vGameObjects[j]->GetType();
@@ -144,7 +162,7 @@ void CSceneMgr::Draw_Objects()
 			if (m_vGameObjects[i] != NULL)
 			{
 				int type = m_vGameObjects[i]->GetType();
-				if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
+				if (type == OBJECT_BUILDING)
 					g_Renderer->DrawTexturedRect(m_vGameObjects[i], m_vGameObjects[i]->GettexID());
 				else
 					g_Renderer->DrawSolidRect(m_vGameObjects[i]);
@@ -154,11 +172,11 @@ void CSceneMgr::Draw_Objects()
 	}
 }
 
-void CSceneMgr::Add_Object(float x, float y, int type)
+void CSceneMgr::Add_Object(float x, float y, int type, int team)
 {
 	if (m_vGameObjects.size() < MAX_ObJECTS_COUNT)
 	{
-		CGameObject* nRect = new CRect(x, y, type);
+		CGameObject* nRect = new CRect(x, y, type, team);
 		((CRect *)nRect)->SetDirection(GetRandomExceptZero(-1.f, 1.f), GetRandomExceptZero(-1.f, 1.f), 0.f);
 
 		nRect->SetId(m_nobjectId++);
@@ -166,8 +184,12 @@ void CSceneMgr::Add_Object(float x, float y, int type)
 		if (type == OBJECT_CHARACTER)
 			nRect->SettexID(m_nchartexId);
 		else if (type == OBJECT_BUILDING)
-			nRect->SettexID(m_nbuildingtexId);
-
+		{
+			if (team == TEAMRED)
+				nRect->SettexID(m_nredbuildingtexId);
+			else if (team == TEAMBLUE)
+				nRect->SettexID(m_nbluebuildingtexId);
+		}
 		m_vGameObjects.push_back(nRect);
 	}
 	else
@@ -176,11 +198,11 @@ void CSceneMgr::Add_Object(float x, float y, int type)
 	}
 }
 
-void CSceneMgr::Add_Object(float x, float y, int type, int id)
+void CSceneMgr::Add_Object(float x, float y, int type, int id, int team)
 {
 	if (m_vGameObjects.size() < MAX_ObJECTS_COUNT)
 	{
-		CGameObject* nRect = new CRect(x, y, type);
+		CGameObject* nRect = new CRect(x, y, type, team);
 		((CRect *)nRect)->SetDirection(GetRandomExceptZero(-1.f, 1.f), GetRandomExceptZero(-1.f, 1.f), 0.f);
 		nRect->SetId(id);
 

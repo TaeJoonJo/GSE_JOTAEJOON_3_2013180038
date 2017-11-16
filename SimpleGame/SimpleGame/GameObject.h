@@ -21,6 +21,8 @@ protected:
 
 	int m_ntype;
 
+	int m_nteam;
+
 	// ½Äº°ÀÚ
 	int m_nId;
 
@@ -69,6 +71,9 @@ public:
 	inline int GetType() {
 		return m_ntype;
 	}
+	inline int GetTeam() {
+		return m_nteam;
+	}
 	inline int GetID() {
 		return m_nId;
 	}
@@ -87,6 +92,9 @@ public:
 	}
 	inline void SetLifetime(float lifetime) {
 		m_flifetime = lifetime;
+	}
+	inline void SetTeam(int team) {
+		m_nteam = team;
 	}
 	inline void SetId(int id) {
 		m_nId = id;

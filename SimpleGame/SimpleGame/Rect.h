@@ -19,7 +19,7 @@ public:
 	CRect();
 	//CRect(float x, float y, float z, float size, float speed, float r, float g, float b, float a);
 	//CRect(float x, float y, float lifetime);
-	CRect(float x, float y, int type);
+	CRect(float x, float y, int type, int team = TEAMRED);
 	~CRect();
 public:
 	void Render();
