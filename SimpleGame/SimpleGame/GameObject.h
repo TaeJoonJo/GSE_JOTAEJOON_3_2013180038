@@ -117,3 +117,12 @@ public:
 	virtual void Release() = 0;
 };
 
+class CCooltime
+{
+public:
+	CCooltime();
+	~CCooltime();
+public:
+	bool m_isEnable;
+	float m_fCooltime;
+};

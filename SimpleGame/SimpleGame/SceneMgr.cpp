@@ -87,7 +87,9 @@ void CSceneMgr::Update_Objects(float time)
 							iter = biter;
 						}
 						else
+						{
 							biter = m_vGameObjects.erase(biter);
+						}
 					}
 					else
 					{
@@ -96,7 +98,9 @@ void CSceneMgr::Update_Objects(float time)
 				}
 			}
 			else
+			{
 				iter = m_vGameObjects.erase(iter);
+			}
 		}
 		else
 		{
@@ -124,22 +128,22 @@ void CSceneMgr::Update_Objects(float time)
 					m_vGameObjects[j]->Attacked();
 				}
 				// 빌딩과 캐릭터간의 충돌
-				if (itype == OBJECT_BUILDING && jtype == OBJECT_CHARACTER)
+				else if (itype == OBJECT_BUILDING && jtype == OBJECT_CHARACTER)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
 				}
 				// 빌딩과 화살간의 충돌
-				if (itype == OBJECT_BUILDING && jtype == OBJECT_ARROW)
+				else if (itype == OBJECT_BUILDING && jtype == OBJECT_ARROW)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
 				}
 				// 캐릭터와 빌딩간의 충돌
-				if (itype == OBJECT_CHARACTER && jtype == OBJECT_BULLET)
+				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_BULLET)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
 				}
 				// 캐릭터와 화살간의 충돌
-				if (itype == OBJECT_CHARACTER && jtype == OBJECT_ARROW)
+				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_ARROW)
 				{
 					if(m_vGameObjects[i]->GetID() != m_vGameObjects[j]->GetID())
 						m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());

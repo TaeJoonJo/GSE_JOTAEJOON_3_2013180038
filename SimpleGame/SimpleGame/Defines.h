@@ -12,11 +12,8 @@
 #define OBJECT_ARROW 11
 
 #define MAX_ObJECTS_COUNT 1000
-#define RECT_SPEED 0.5f
 
-#define TEAMBLUE 2
-#define TEAMRED 1
-
-#define RAND_FLOAT ((((float)(rand() % 20) - 10.f) * 0.1f))
+#define TEAMBLUE 2	// 아군
+#define TEAMRED 1	// 적군
 
 #define VECTORITERATOR std::vector<CGameObject*>::iterator

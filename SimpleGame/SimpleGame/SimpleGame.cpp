@@ -23,10 +23,9 @@ CSceneMgr* g_Scene = NULL;
 
 DWORD g_prevTime = 0;
 
-bool isLeft = false;
+bool g_isLeft = false;
 
-bool isEnableChar = true;
-float g_fCharCooltime = 0.f;
+CCooltime CharCooltime;
 
 void CoolTime(float time);
 
@@ -61,18 +60,18 @@ void MouseInput(int button, int state, int x, int y)
 
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		isLeft = true;
+		g_isLeft = true;
 	}
 	else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		if (isLeft)
+		if (g_isLeft)
 		{
-			if (isEnableChar)
+			if (CharCooltime.m_isEnable)
 			{
 				if (RenderSceney <= 0.f)
 				{
 					g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER, TEAMBLUE);
-					isEnableChar = false;
+					CharCooltime.m_isEnable = false;
 				}
 				else
 				{
@@ -81,8 +80,10 @@ void MouseInput(int button, int state, int x, int y)
 			}
 			else
 			{
+				printf("Char CoolTime : %f\n", CharCooltime.m_fCooltime);
 				printf("Character is Cooltime!\n");
 			}
+			g_isLeft = false;
 		}
 
 	}
@@ -145,13 +146,12 @@ void CoolTime(float time)
 {
 	float elapedtime = time * 0.001f;
 
-	if (!isEnableChar)
+	if (!CharCooltime.m_isEnable)
 	{
-		//printf("Char CoolTime : %d\n", g_fCharCooltime);
-		if ((g_fCharCooltime += elapedtime) >= 7.f)
+		if ((CharCooltime.m_fCooltime += elapedtime) >= 7.f)
 		{
-			g_fCharCooltime = 0.f;
-			isEnableChar = true;
+			CharCooltime.m_fCooltime = 0.f;
+			CharCooltime.m_isEnable = true;
 		}
 	}
 }

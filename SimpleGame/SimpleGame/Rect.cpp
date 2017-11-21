@@ -10,8 +10,6 @@ CRect::CRect()
 	m_fx = GetRandom(-250.f, 250.f);
 	m_fy = GetRandom(-250.f, 250.f);
 	
-	m_fspeed = RECT_SPEED;
-
 	m_fsize = 10.f;
 	m_foriginsize = m_fsize;
 
@@ -45,7 +43,7 @@ CRect::CRect(float x, float y, int type, int team)
 	if (m_ntype == OBJECT_CHARACTER)
 	{
 		m_flife = 10.f;
-		m_fspeed = 100.f;
+		m_fspeed = 300.f;
 		m_fsize = 10.f;
 		if (m_nteam == TEAMRED)
 			SetColor(1.f, 0.f, 0.f, 1.f);
@@ -67,7 +65,7 @@ CRect::CRect(float x, float y, int type, int team)
 	else if (m_ntype == OBJECT_BULLET)
 	{
 		m_flife = 20.f;
-		m_fspeed = 100.f;
+		m_fspeed = 600.f;
 		m_fsize = 2.f;
 		if (m_nteam == TEAMRED)
 			SetColor(1.f, 0.f, 0.f, 1.f);
@@ -140,19 +138,21 @@ void CRect::Update(float time)
 		}
 	}
 
-	if (((m_fx + (m_fsize * 0.5f)) <= -WINHALFSIZEX) || ((m_fx - (m_fsize * 0.5f)) >= WINHALFSIZEX))
+	if (((m_fx - (m_fsize * 0.5f)) <= -WINHALFSIZEX) || ((m_fx + (m_fsize * 0.5f)) >= WINHALFSIZEX))
 		m_fxmoved *= -1.f;
-	if ((m_fy + (m_fsize * 0.5f)) <= -WINHALFSIZEY || ((m_fy - (m_fsize * 0.5f)) >= WINHALFSIZEY))
+	if ((m_fy - (m_fsize * 0.5f)) <= -WINHALFSIZEY || ((m_fy + (m_fsize * 0.5f)) >= WINHALFSIZEY))
 		m_fymoved *= -1.f;
 
-	float fhoriginsize = m_foriginsize * 0.5f;
-	if (m_foriginsize + fhoriginsize < m_fsize)
-		m_fsmoved *= -1.f;
-	if(m_foriginsize - fhoriginsize > m_fsize)
-		m_fsmoved *= -1.f;
+	/*if (m_ntype == OBJECT_CHARACTER)
+	{
+		float fhoriginsize = m_foriginsize * 0.5f;
+		if (m_foriginsize + fhoriginsize < m_fsize)
+			m_fsmoved *= -1.f;
+		if (m_foriginsize - fhoriginsize > m_fsize)
+			m_fsmoved *= -1.f;
 
-	if(m_ntype == OBJECT_CHARACTER)
 		m_fsize += fhoriginsize * m_fsmoved * time;
+	}*/
 
 	if(m_flifetime > 0.f)
 		m_flifetime -= 0.5f * time;
