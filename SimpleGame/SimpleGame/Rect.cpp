@@ -42,31 +42,34 @@ CRect::CRect(float x, float y, int type, int team)
 
 	if (m_ntype == OBJECT_CHARACTER)
 	{
-		m_flife = 10.f;
+		m_flife = 100.f;
+		m_fmaxlife = m_flife;
 		m_fspeed = 300.f;
-		m_fsize = 10.f;
+		m_fsize = 30.f;
+		m_flevel = 0.2f;
 		if (m_nteam == TEAMRED)
-			SetColor(1.f, 0.f, 0.f, 1.f);
+			SetColor(1.f, 1.f, 1.f, 1.f);
 		else if (m_nteam == TEAMBLUE)
-			SetColor(0.f, 0.f, 1.f, 1.f);
+			SetColor(1.f, 1.f, 1.f, 1.f);
 		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Planet.png");
 	}
 	else if (m_ntype == OBJECT_BUILDING)
 	{
 		m_flife = 500.f;
+		m_fmaxlife = m_flife;
 		m_fspeed = 0.f;
 		m_fsize = 100.f;
-		m_fred = 1.f;
-		m_fblue = 0.f;
-		m_fgreen = 1.f;
-		m_falpha = 1.f;
+		m_flevel = 0.1f;
+		SetColor(1.f, 1.f, 1.f, 1.f);
 		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Moon.png");
 	}
 	else if (m_ntype == OBJECT_BULLET)
 	{
-		m_flife = 20.f;
+		m_flife = 15.f;
+		m_fmaxlife = m_flife;
 		m_fspeed = 600.f;
-		m_fsize = 2.f;
+		m_fsize = 4.f;
+		m_flevel = 0.3f;
 		if (m_nteam == TEAMRED)
 			SetColor(1.f, 0.f, 0.f, 1.f);
 		else if (m_nteam == TEAMBLUE)
@@ -75,8 +78,10 @@ CRect::CRect(float x, float y, int type, int team)
 	else if (m_ntype == OBJECT_ARROW)
 	{
 		m_flife = 10.f;
+		m_fmaxlife = m_flife;
 		m_fspeed = 100.f;	
-		m_fsize = 2.f;
+		m_fsize = 4.f;
+		m_flevel = 0.3f;
 		if (m_nteam == TEAMRED)
 			SetColor(0.5f, 0.2f, 0.7f, 1.f);
 		else if (m_nteam == TEAMBLUE)
@@ -101,6 +106,14 @@ void CRect::Update(float time)
 {
 	if (m_ntype == OBJECT_CHARACTER)
 	{
+		if (((m_fx - (m_fsize * 0.5f)) <= -WINHALFSIZEX) || ((m_fx + (m_fsize * 0.5f)) >= WINHALFSIZEX))
+			m_fxmoved *= -1.f;
+		if ((m_fy - (m_fsize * 0.5f)) <= -WINHALFSIZEY || ((m_fy + (m_fsize * 0.5f)) >= WINHALFSIZEY))
+			m_fymoved *= -1.f;
+	}
+
+	if (m_ntype == OBJECT_CHARACTER)
+	{
 		/*if (m_isColied)
 		{
 			if ((m_fcolidetimer += time) > 0.3f)
@@ -112,7 +125,7 @@ void CRect::Update(float time)
 			else
 				SetColor(1.0f, 0.f, 1.f, 1.f);
 		}*/
-		if ((m_fshoottimer += time) > 3.f)
+		if ((m_fshoottimer += time) > CHARSHOOTTIMER)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_ARROW, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
@@ -124,25 +137,21 @@ void CRect::Update(float time)
 		{
 			if ((m_fcolidetimer += time) > 1.f)
 			{
-				SetColor(1.f, 1.f, 0.f, 1.f);
+				SetColor(1.f, 1.f, 1.f, 1.f);
 				m_isColied = false;
 				m_fcolidetimer = 0.f;
 			}
 			else
 				SetColor(1.f, 0.f, 0.4f, 1.f);
 		}
-		if ((m_fshoottimer += time) > 10.f)
+		if ((m_fshoottimer += time) > BUILDINGSHOOTTIMER)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_BULLET, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
 		}
 	}
 
-	if (((m_fx - (m_fsize * 0.5f)) <= -WINHALFSIZEX) || ((m_fx + (m_fsize * 0.5f)) >= WINHALFSIZEX))
-		m_fxmoved *= -1.f;
-	if ((m_fy - (m_fsize * 0.5f)) <= -WINHALFSIZEY || ((m_fy + (m_fsize * 0.5f)) >= WINHALFSIZEY))
-		m_fymoved *= -1.f;
-
+	
 	/*if (m_ntype == OBJECT_CHARACTER)
 	{
 		float fhoriginsize = m_foriginsize * 0.5f;
@@ -156,10 +165,6 @@ void CRect::Update(float time)
 
 	if(m_flifetime > 0.f)
 		m_flifetime -= 0.5f * time;
-
-	//printf("life: %f\n", temptime);
-	//if (m_ntype == OBJECT_BUILDING)
-	//	printf("life : %f\n", m_flife);
 
 	MovexybySpeed(time);
 }

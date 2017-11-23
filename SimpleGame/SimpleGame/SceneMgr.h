@@ -16,7 +16,8 @@ protected:
 
 	static int m_nobjectId;
 
-	unsigned int m_nchartexId;
+	unsigned int m_nredchartexId;
+	unsigned int m_nbluechartexId;
 	unsigned int m_nredbuildingtexId;
 	unsigned int m_nbluebuildingtexId;
 public:

@@ -13,6 +13,13 @@
 
 #define MAX_ObJECTS_COUNT 1000
 
+#define CHARCOOLTIME 5.f
+
+#define BUILDINGSHOOTTIMER 10.f
+#define CHARSHOOTTIMER 3.f
+
+#define REDREGENTIMER 5.f
+
 #define TEAMBLUE 2	// 아군
 #define TEAMRED 1	// 적군
 

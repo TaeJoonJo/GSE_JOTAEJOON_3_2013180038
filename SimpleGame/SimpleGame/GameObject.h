@@ -5,6 +5,7 @@ class CGameObject
 protected:
 	float m_flifetime;
 	float m_flife;
+	float m_fmaxlife;
 
 	float m_fx;
 	float m_fy;
@@ -18,6 +19,8 @@ protected:
 	float m_fgreen;
 	float m_fblue;
 	float m_falpha;
+
+	float m_flevel;
 
 	int m_ntype;
 
@@ -65,6 +68,9 @@ public:
 	inline float GetLife() {
 		return m_flife;
 	}
+	inline float GetMaxLife() {
+		return m_fmaxlife;
+	}
 	inline float GetLifetime() {
 		return m_flifetime;
 	}
@@ -80,6 +86,9 @@ public:
 	inline unsigned int GettexID() {
 		return m_ntexID;
 	}
+	inline float GetLevel() {
+		return m_flevel;
+	}
 
 	inline void SetPosition(float x, float y, float z) {
 		m_fx = x; m_fy = y; m_fz = z;
@@ -89,6 +98,9 @@ public:
 	}
 	inline void SetLife(float life) {
 		m_flife = life;
+	}
+	inline void SetMaxLife(float maxlife) {
+		m_fmaxlife = maxlife;
 	}
 	inline void SetLifetime(float lifetime) {
 		m_flifetime = lifetime;
@@ -101,6 +113,9 @@ public:
 	}
 	inline void SettexID(unsigned int texid) {
 		m_ntexID = texid;
+	}
+	inline void SetLevel(float level) {
+		m_flevel = level;
 	}
 	inline void Attacked(float damage = 0.f) {
 		if(m_flife > 0.f) m_flife -= damage;

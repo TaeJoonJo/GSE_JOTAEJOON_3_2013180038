@@ -3,6 +3,8 @@
 
 
 CGameObject::CGameObject()
+	:
+	m_flevel(0.f)
 {
 }
 
