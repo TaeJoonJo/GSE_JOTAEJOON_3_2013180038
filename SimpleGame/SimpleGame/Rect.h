@@ -7,9 +7,9 @@
 class CRect :public CGameObject
 {
 protected:
-	float m_fxmoved;
-	float m_fymoved;
-	float m_fzmoved;
+	float m_fdx;
+	float m_fdy;
+	float m_fdz;
 
 	float m_fsmoved;
 	float m_foriginsize;
@@ -31,11 +31,11 @@ public:
 	inline void SetSpeed(float speed) {
 		m_fspeed = speed;
 	}
-	inline void SetDirection(float x, float y, float z)
+	inline void SetDirection(float dx, float dy, float dz)
 	{
-		m_fxmoved = x;
-		m_fymoved = y;
-		m_fzmoved = z;
+		m_fdx = dx;
+		m_fdy = dy;
+		m_fdz = dz;
 	}
 
 	void MovexybySpeed(float time);

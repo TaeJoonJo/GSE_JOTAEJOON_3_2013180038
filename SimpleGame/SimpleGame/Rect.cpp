@@ -4,7 +4,7 @@
 //#include "SceneMgr.h"
 
 CRect::CRect()
-	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(1.f),
+	: m_fdx(1.f), m_fdy(1.f), m_fdz(1.f),
 	m_fsmoved(1.f)
 {
 	m_fx = GetRandom(-250.f, 250.f);
@@ -21,7 +21,7 @@ CRect::CRect()
 }
 
 CRect::CRect(float x, float y, int type, int team)
-	: m_fxmoved(1.f), m_fymoved(1.f), m_fzmoved(0.f),
+	: m_fdx(1.f), m_fdy(1.f), m_fdz(0.f),
 	m_fsmoved(1.f)
 {
 	m_fx = x;
@@ -107,9 +107,9 @@ void CRect::Update(float time)
 	if (m_ntype == OBJECT_CHARACTER)
 	{
 		if (((m_fx - (m_fsize * 0.5f)) <= -WINHALFSIZEX) || ((m_fx + (m_fsize * 0.5f)) >= WINHALFSIZEX))
-			m_fxmoved *= -1.f;
+			m_fdx *= -1.f;
 		if ((m_fy - (m_fsize * 0.5f)) <= -WINHALFSIZEY || ((m_fy + (m_fsize * 0.5f)) >= WINHALFSIZEY))
-			m_fymoved *= -1.f;
+			m_fdy *= -1.f;
 	}
 
 	if (m_ntype == OBJECT_CHARACTER)
@@ -125,7 +125,7 @@ void CRect::Update(float time)
 			else
 				SetColor(1.0f, 0.f, 1.f, 1.f);
 		}*/
-		if ((m_fshoottimer += time) > CHARSHOOTTIMER)
+		if ((m_fshoottimer += time) > SHOOTTIMER_CHAR)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_ARROW, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
@@ -144,7 +144,7 @@ void CRect::Update(float time)
 			else
 				SetColor(1.f, 0.f, 0.4f, 1.f);
 		}
-		if ((m_fshoottimer += time) > BUILDINGSHOOTTIMER)
+		if ((m_fshoottimer += time) > SHOOTTIMER_BUILDING)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_BULLET, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
@@ -171,8 +171,8 @@ void CRect::Update(float time)
 
 void CRect::MovexybySpeed(float time)
 {
-	m_fx += m_fspeed * m_fxmoved * time;
-	m_fy += m_fspeed * m_fymoved * time;
+	m_fx += m_fspeed * m_fdx * time;
+	m_fy += m_fspeed * m_fdy * time;
 }
 
 void CRect::MovebyMouse(int x, int y)

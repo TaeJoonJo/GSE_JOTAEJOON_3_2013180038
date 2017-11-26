@@ -2,8 +2,6 @@
 
 #include "stdafx.h"
 
-class CRect;
-
 inline float RandDir() {
 	int x = rand();
 
@@ -12,17 +10,17 @@ inline float RandDir() {
 	return -1.f;
 }
 
-template <class Rect>
-bool CollisionRect(Rect* a, Rect* b)
+template <class Object>
+bool CollisionRect(Object* a, Object* b)
 {
-	float ax = ((CRect *)a)->GetX();
-	float ay = ((CRect *)a)->GetY();
-	float as = ((CRect *)a)->GetSize();
+	float ax = a->GetX();
+	float ay = a->GetY();
+	float as = a->GetSize();
 	float ahs = as / 2.f;
 
-	float bx = ((CRect *)b)->GetX();
-	float by = ((CRect *)b)->GetY();
-	float bs = ((CRect *)b)->GetSize();
+	float bx = b->GetX();
+	float by = b->GetY();
+	float bs = b->GetSize();
 	float bhs = bs / 2.f;
 
 	if (ax - ahs <= bx + bhs &&

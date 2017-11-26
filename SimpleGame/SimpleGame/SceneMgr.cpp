@@ -62,7 +62,7 @@ void CSceneMgr::Update_Objects(float time)
 	if (elsapedtime > 10.f)
 		elsapedtime = 10.f;
 
-	if ((m_fRedCharacterTimer += elsapedtime) > REDREGENTIMER)
+	if ((m_fRedCharacterTimer += elsapedtime) > REGENTIMER_RED)
 	{
 		Add_Object(GetRandom(-WINHALFSIZEX, WINHALFSIZEX), GetRandom(0.f, WINHALFSIZEY), OBJECT_CHARACTER, TEAMRED);
 

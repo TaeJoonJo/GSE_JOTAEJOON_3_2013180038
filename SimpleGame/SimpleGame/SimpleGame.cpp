@@ -148,7 +148,7 @@ void CoolTime(float time)
 
 	if (!CharCooltime.m_isEnable)
 	{
-		if ((CharCooltime.m_fCooltime += elapedtime) >= CHARCOOLTIME)
+		if ((CharCooltime.m_fCooltime += elapedtime) >= COOLTIME_CHAR)
 		{
 			CharCooltime.m_fCooltime = 0.f;
 			CharCooltime.m_isEnable = true;
