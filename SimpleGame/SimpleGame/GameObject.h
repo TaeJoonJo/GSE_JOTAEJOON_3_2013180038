@@ -12,6 +12,10 @@ protected:
 	float m_fz;
 	float m_fsize;
 
+	float m_fdx;
+	float m_fdy;
+	float m_fdz;
+
 	float m_fspeed;
 
 	// R G B A
@@ -33,6 +37,12 @@ protected:
 
 	float m_fcolidetimer;
 public:
+	int m_ntotalSeqx;
+	int m_ntotalSeqy;
+
+	int m_ncurrSeqx;
+	int m_ncurrSeqy;
+
 	bool m_isColied;
 public:
 	CGameObject();
@@ -49,6 +59,15 @@ public:
 	}
 	inline float GetZ() {
 		return m_fz;
+	}
+	inline float GetDx() {
+		return m_fdx;
+	}
+	inline float GetDy() {
+		return m_fdy;
+	}
+	inline float GetDz() {
+		return m_fdz;
 	}
 	inline float GetSize() {
 		return m_fsize;
@@ -88,6 +107,9 @@ public:
 	}
 	inline float GetLevel() {
 		return m_flevel;
+	}
+	inline float GetColideTime() {
+		return m_fcolidetimer;
 	}
 
 	inline void SetPosition(float x, float y, float z) {

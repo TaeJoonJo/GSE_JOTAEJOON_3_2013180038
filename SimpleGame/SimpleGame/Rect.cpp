@@ -4,7 +4,7 @@
 //#include "SceneMgr.h"
 
 CRect::CRect()
-	: m_fdx(1.f), m_fdy(1.f), m_fdz(1.f),
+	:
 	m_fsmoved(1.f)
 {
 	m_fx = GetRandom(-250.f, 250.f);
@@ -21,7 +21,7 @@ CRect::CRect()
 }
 
 CRect::CRect(float x, float y, int type, int team)
-	: m_fdx(1.f), m_fdy(1.f), m_fdz(0.f),
+	:
 	m_fsmoved(1.f)
 {
 	m_fx = x;
@@ -39,6 +39,9 @@ CRect::CRect(float x, float y, int type, int team)
 	m_isColied = false;
 
 	m_fshoottimer = 0.f;
+
+	m_ncurrSeqx = 0;
+	m_ncurrSeqy = 0;
 
 	if (m_ntype == OBJECT_CHARACTER)
 	{
@@ -61,6 +64,8 @@ CRect::CRect(float x, float y, int type, int team)
 		m_fsize = 100.f;
 		m_flevel = 0.1f;
 		SetColor(1.f, 1.f, 1.f, 1.f);
+		m_ntotalSeqx = 5;
+		m_ntotalSeqy = 4;
 		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Moon.png");
 	}
 	else if (m_ntype == OBJECT_BULLET)
@@ -87,7 +92,27 @@ CRect::CRect(float x, float y, int type, int team)
 		else if (m_nteam == TEAMBLUE)
 			SetColor(1.f, 1.f, 0.f, 1.f);
 	}
-
+	else if (m_ntype == OBJECT_BACKGROUND)
+	{
+		m_flife = 100000.f;
+		m_fmaxlife = m_flife;
+		m_fspeed = 0.f;
+		m_fsize = 700.f;
+		m_flevel = 0.99f;
+		SetColor(1.f, 1.f, 1.f, 1.f);
+	}
+	else if (m_ntype == OBJECT_PARTICLE)
+	{
+		m_flife = 15.f;
+		m_fmaxlife = m_flife;
+		m_fspeed = 600.f;
+		m_fsize = 4.f;
+		m_flevel = 0.3f;
+		if (m_nteam == TEAMRED)
+			SetColor(1.f, 0.f, 0.f, 1.f);
+		else if (m_nteam == TEAMBLUE)
+			SetColor(0.f, 0.f, 1.f, 1.f);
+	}
 	m_flifetime = 100.f;
 
 	m_foriginsize = m_fsize;
@@ -150,8 +175,18 @@ void CRect::Update(float time)
 			m_fshoottimer = 0.f;
 		}
 	}
+	if (m_ntype == OBJECT_PARTICLE)
+		m_fcolidetimer += time;
 
-	
+	if (m_ntype == OBJECT_BUILDING)
+	{
+		if (m_ntotalSeqx - 2 < m_ncurrSeqx)
+			m_ncurrSeqx = 0;
+	}
+	else if (m_ntotalSeqx - 1 < m_ncurrSeqx)
+		m_ncurrSeqx = 0;
+	if (m_ntotalSeqy < m_ncurrSeqy)
+		m_ncurrSeqy = 0;
 	/*if (m_ntype == OBJECT_CHARACTER)
 	{
 		float fhoriginsize = m_foriginsize * 0.5f;

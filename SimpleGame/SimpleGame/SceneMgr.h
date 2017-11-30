@@ -16,10 +16,17 @@ protected:
 
 	static int m_nobjectId;
 
+	unsigned int m_nbackgroundtexId;
+
 	unsigned int m_nredchartexId;
 	unsigned int m_nbluechartexId;
 	unsigned int m_nredbuildingtexId;
 	unsigned int m_nbluebuildingtexId;
+
+	unsigned int m_nredbuildingspritetexId;
+	unsigned int m_nbluebuildingspritetexId;
+
+	unsigned int m_npaticletexId;
 public:
 	CSceneMgr();
 	~CSceneMgr();

@@ -7,10 +7,6 @@
 class CRect :public CGameObject
 {
 protected:
-	float m_fdx;
-	float m_fdy;
-	float m_fdz;
-
 	float m_fsmoved;
 	float m_foriginsize;
 
