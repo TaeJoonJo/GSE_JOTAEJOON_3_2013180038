@@ -10,7 +10,7 @@ int CSceneMgr::m_nobjectId = 0;
 
 CSceneMgr::CSceneMgr()
 	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nredchartexId(0), m_nbluechartexId(0), m_nbackgroundtexId(0),
-	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_npaticletexId(0),
+	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), m_npaticletexId(0),
 	m_fRedCharacterTimer(0.f)
 {
 	//m_ftime = timeGetTime();
@@ -42,12 +42,18 @@ bool CSceneMgr::Ready_Renderer()
 bool CSceneMgr::Ready_Objects()
 {
 	m_nbackgroundtexId = g_Renderer->CreatePngTexture("../Resource/Space.png");
-	m_nbluechartexId = g_Renderer->CreatePngTexture("../Resource/BlueUnit.png");
-	m_nredchartexId = g_Renderer->CreatePngTexture("../Resource/RedUnit.png");
-	m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
-	m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
+	/*m_nbluechartexId = g_Renderer->CreatePngTexture("../Resource/BlueUnit.png");
+	m_nredchartexId = g_Renderer->CreatePngTexture("../Resource/RedUnit.png");*/
+
+	//m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
+	//m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
 
 	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle3.png");
+
+	// 5x4
+	m_nbluecharspritetexId = g_Renderer->CreatePngTexture("../Resource/rocksprite2.png");
+	// 5x4
+	m_nredcharspritetexId = g_Renderer->CreatePngTexture("../Resource/rocksprite1.png");
 
 	// 5x4
 	m_nbluebuildingspritetexId = g_Renderer->CreatePngTexture("../Resource/Earthsprite.png");
@@ -101,7 +107,11 @@ void CSceneMgr::Update_Objects(float time)
 					int bulletid = (*biter)->GetID();
 					if (bulletid == charid)
 					{
-						Add_Object((*biter)->GetX(), (*biter)->GetY(), OBJECT_PARTICLE, TEAMNOT);
+						if ((*biter)->GetType() == OBJECT_BULLET)
+						{
+							Add_Object((*biter)->GetX(), (*biter)->GetY(), -(*biter)->GetDx(), -(*biter)->GetDy(), OBJECT_PARTICLE, (*biter)->GetTeam());
+						}
+
 						if (biter == iter)
 						{
 							biter = m_vGameObjects.erase(biter);
@@ -162,13 +172,13 @@ void CSceneMgr::Update_Objects(float time)
 				else if (itype == OBJECT_BUILDING && jtype == OBJECT_BULLET)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
-					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), OBJECT_PARTICLE, TEAMNOT);
+					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
 				}
 				// 캐릭터와 총알간의 충돌
 				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_BULLET)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
-					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), OBJECT_PARTICLE, TEAMNOT);
+					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
 				}
 				// 캐릭터와 화살간의 충돌
 				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_ARROW)
@@ -198,13 +208,14 @@ void CSceneMgr::Draw_Objects()
 				{
 					g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx++, m_vGameObjects[i]->m_ncurrSeqy++,
+						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
 						m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
 				}
 				else if (type == OBJECT_CHARACTER)
-					g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetLevel());
+						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
+						m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
 				else if (type == OBJECT_BACKGROUND)
 				{
 					g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
@@ -214,15 +225,15 @@ void CSceneMgr::Draw_Objects()
 				else if (type == OBJECT_PARTICLE)
 				{
 					g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize() + 10.f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime());
+						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+						m_vGameObjects[i]->GetDx(), m_vGameObjects[i]->GetDy(), m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetColideTime());
 				}
 				else
 					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						m_vGameObjects[i]->GetLevel());
 
-				if (type == OBJECT_BUILDING && type == OBJECT_CHARACTER)
+				if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
 				{
 					if (m_vGameObjects[i]->GetTeam() == TEAMBLUE)
 						g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
@@ -250,9 +261,9 @@ void CSceneMgr::Add_Object(float x, float y, int type, int team)
 		if (type == OBJECT_CHARACTER)
 		{
 			if (team == TEAMRED)
-				nRect->SettexID(m_nredchartexId);
+				nRect->SettexID(m_nredcharspritetexId);
 			else if (team == TEAMBLUE)
-				nRect->SettexID(m_nbluechartexId);
+				nRect->SettexID(m_nbluecharspritetexId);
 		}
 		else if (type == OBJECT_BUILDING)
 		{
@@ -262,8 +273,13 @@ void CSceneMgr::Add_Object(float x, float y, int type, int team)
 				nRect->SettexID(m_nbluebuildingspritetexId);
 		}
 		else if (type == OBJECT_BACKGROUND)
+		{
 			nRect->SettexID(m_nbackgroundtexId);
-
+		}
+		else if (type == OBJECT_PARTICLE)
+		{
+			nRect->SettexID(m_npaticletexId);
+		}
 		m_vGameObjects.push_back(nRect);
 	}
 	else
@@ -280,6 +296,45 @@ void CSceneMgr::Add_Object(float x, float y, int type, int id, int team)
 		((CRect *)nRect)->SetDirection(GetRandomExceptZero(-1.f, 1.f), GetRandomExceptZero(-1.f, 1.f), 0.f);
 		nRect->SetId(id);
 
+		m_vGameObjects.push_back(nRect);
+	}
+	else
+	{
+		printf("MAX OBJECT COUNT OVER\n");
+	}
+}
+
+void CSceneMgr::Add_Object(float x, float y, float dx, float dy, int type, int team)
+{
+	if (m_vGameObjects.size() < MAX_ObJECTS_COUNT)
+	{
+		CGameObject* nRect = new CRect(x, y, type, team);
+		((CRect *)nRect)->SetDirection(dx, dx, 0.f);
+
+		nRect->SetId(m_nobjectId++);
+
+		if (type == OBJECT_CHARACTER)
+		{
+			if (team == TEAMRED)
+				nRect->SettexID(m_nredcharspritetexId);
+			else if (team == TEAMBLUE)
+				nRect->SettexID(m_nbluecharspritetexId);
+		}
+		else if (type == OBJECT_BUILDING)
+		{
+			if (team == TEAMRED)
+				nRect->SettexID(m_nredbuildingspritetexId);
+			else if (team == TEAMBLUE)
+				nRect->SettexID(m_nbluebuildingspritetexId);
+		}
+		else if (type == OBJECT_BACKGROUND)
+		{
+			nRect->SettexID(m_nbackgroundtexId);
+		}
+		else if (type == OBJECT_PARTICLE)
+		{
+			nRect->SettexID(m_npaticletexId);
+		}
 		m_vGameObjects.push_back(nRect);
 	}
 	else

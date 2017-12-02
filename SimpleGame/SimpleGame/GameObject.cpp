@@ -7,7 +7,7 @@ CGameObject::CGameObject()
 	m_flevel(0.f),
 	m_ntotalSeqx(0), m_ntotalSeqy(0),
 	m_ncurrSeqx(0), m_ncurrSeqy(0),
-	m_fcolidetimer(0.f)
+	m_fcolidetimer(0.f), m_fseqtimer(0.f)
 {
 }
 

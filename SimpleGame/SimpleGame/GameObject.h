@@ -35,6 +35,7 @@ protected:
 
 	unsigned int m_ntexID;
 
+	float m_fseqtimer;
 	float m_fcolidetimer;
 public:
 	int m_ntotalSeqx;
@@ -138,6 +139,15 @@ public:
 	}
 	inline void SetLevel(float level) {
 		m_flevel = level;
+	}
+	inline void SetSpeed(float speed) {
+		m_fspeed = speed;
+	}
+	inline void SetDirection(float dx, float dy, float dz)
+	{
+		m_fdx = dx;
+		m_fdy = dy;
+		m_fdz = dz;
 	}
 	inline void Attacked(float damage = 0.f) {
 		if(m_flife > 0.f) m_flife -= damage;

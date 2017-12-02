@@ -20,6 +20,10 @@ protected:
 
 	unsigned int m_nredchartexId;
 	unsigned int m_nbluechartexId;
+
+	unsigned int m_nredcharspritetexId;
+	unsigned int m_nbluecharspritetexId;
+
 	unsigned int m_nredbuildingtexId;
 	unsigned int m_nbluebuildingtexId;
 
@@ -43,6 +47,8 @@ public:
 	inline CGameObject* Get_Object(int index) {
 		return (m_vGameObjects[index]);
 	}
+	
 	void Add_Object(float x, float y, int type, int team);
 	static void Add_Object(float x, float y, int type, int id, int team);
+	void Add_Object(float x, float y, float dx, float dy, int type, int team);
 };
