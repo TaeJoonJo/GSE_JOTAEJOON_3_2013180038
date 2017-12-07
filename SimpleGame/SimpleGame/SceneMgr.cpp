@@ -8,11 +8,12 @@ Renderer *CSceneMgr::g_Renderer = NULL;
 vector<CGameObject*> CSceneMgr::m_vGameObjects = vector<CGameObject*>();
 int CSceneMgr::m_nobjectId = 0;
 
-CSceneMgr::CSceneMgr()
+CSceneMgr::CSceneMgr(CSoundMgr *soundmgr)
 	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nredchartexId(0), m_nbluechartexId(0), m_nbackgroundtexId(0),
 	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), m_npaticletexId(0),
 	m_fRedCharacterTimer(0.f)
 {
+	m_pSoundMgr = soundmgr;
 	//m_ftime = timeGetTime();
 }
 
@@ -71,6 +72,8 @@ bool CSceneMgr::Ready_Objects()
 	Add_Object(0.f, -WINHALFSIZEY + 100.f, OBJECT_BUILDING, TEAMBLUE);
 	Add_Object(200.f, -WINHALFSIZEY + 100.f, OBJECT_BUILDING, TEAMBLUE);
 
+	m_pSoundMgr->BgSound();
+
 	return true;
 }
 
@@ -80,6 +83,8 @@ void CSceneMgr::Update_Objects(float time)
 	if (elsapedtime > 10.f)
 		elsapedtime = 10.f;
 
+	//g_Renderer->SetSceneTransform(elsapedtime * 100.f, elsapedtime * 100.f, 1.f, 1.f);
+	
 	if ((m_fRedCharacterTimer += elsapedtime) > REGENTIMER_RED)
 	{
 		Add_Object(GetRandom(-WINHALFSIZEX, WINHALFSIZEX), GetRandom(0.f, WINHALFSIZEY), OBJECT_CHARACTER, TEAMRED);
@@ -197,6 +202,7 @@ void CSceneMgr::Update_Objects(float time)
 
 void CSceneMgr::Draw_Objects()
 {
+
 	if (m_vGameObjects.size() > 0)
 	{
 		for (int i = 0; i < m_vGameObjects.size(); ++i)
@@ -256,6 +262,8 @@ void CSceneMgr::Draw_Objects()
 			}
 		}
 	}
+	g_Renderer->DrawText(0.f, 0.f, GLUT_BITMAP_TIMES_ROMAN_24, 0.f, 0.f, 0.f, "Hello World!");
+
 }
 
 void CSceneMgr::Add_Object(float x, float y, int type, int team)

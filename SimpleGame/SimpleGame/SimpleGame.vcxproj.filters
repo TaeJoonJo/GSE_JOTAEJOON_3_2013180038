@@ -23,9 +23,14 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{aa86e47f-445f-4440-9a76-173363b46c4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{1b635fde-73f6-4842-900c-735034351bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoundMgr">
+      <UniqueIdentifier>{d7c5bead-96ec-4cf9-b264-b08e7cecb1de}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Main">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <UniqueIdentifier>{165a17a0-7346-4f40-92a6-aac2048082c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,11 +64,14 @@
     <ClInclude Include="LoadPng.h">
       <Filter>LoadPng</Filter>
     </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundMgr.h">
+      <Filter>SoundMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SimpleGame.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -81,6 +89,15 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundMgr.cpp">
+      <Filter>SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleGame.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +117,24 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\SolidRectWithTextureSeq.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Particle.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Particle.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SolidRectGauge.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SolidRectGauge.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SolidRectXY.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\SolidRectXY.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

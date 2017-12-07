@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Rect.h"
+#include "Sound.h"
+#include "SoundMgr.h"
 
 class Renderer;
 
@@ -9,6 +11,7 @@ class CSceneMgr
 {
 protected:
 	static Renderer *g_Renderer;
+	CSoundMgr *m_pSoundMgr;
 
 	static vector<CGameObject*> m_vGameObjects;
 
@@ -32,7 +35,7 @@ protected:
 
 	unsigned int m_npaticletexId;
 public:
-	CSceneMgr();
+	CSceneMgr(CSoundMgr* soundmgr);
 	~CSceneMgr();
 public:
 	bool Ready_Renderer();

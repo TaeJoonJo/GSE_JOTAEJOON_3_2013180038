@@ -15,11 +15,13 @@ but WITHOUT ANY WARRANTY.
 
 #include "Renderer.h"
 #include "SceneMgr.h"
+#include "SoundMgr.h"
 
 #include "GameObject.h"
 #include "Rect.h"
 
 CSceneMgr* g_Scene = NULL;
+CSoundMgr* g_SoundMgr = NULL;
 
 DWORD g_prevTime = 0;
 
@@ -125,10 +127,13 @@ int main(int argc, char **argv)
 	{
 		std::cout << "GLEW 3.0 not supported\n ";
 	}
-	g_Scene = new CSceneMgr;
+	g_SoundMgr = new CSoundMgr();
+	g_SoundMgr->Init();
+
+	g_Scene = new CSceneMgr(g_SoundMgr);
 	if (!g_Scene->Ready_Renderer())
 		std::cout << "·»´õ·¯ ¿À·ù" << std::endl;
-
+	
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
@@ -138,6 +143,7 @@ int main(int argc, char **argv)
 	glutMainLoop();
 
 	delete g_Scene;
+	delete g_SoundMgr;
 
     return 0;
 }

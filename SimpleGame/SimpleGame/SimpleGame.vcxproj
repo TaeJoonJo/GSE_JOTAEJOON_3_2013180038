@@ -162,6 +162,8 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundMgr.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -172,6 +174,8 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="SimpleGame.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SoundMgr.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -180,12 +184,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Particle.fs" />
+    <None Include="Shaders\Particle.vs" />
     <None Include="Shaders\SolidRect.fs" />
     <None Include="Shaders\SolidRect.vs" />
+    <None Include="Shaders\SolidRectGauge.fs" />
+    <None Include="Shaders\SolidRectGauge.vs" />
     <None Include="Shaders\SolidRectWithTexture.fs" />
     <None Include="Shaders\SolidRectWithTexture.vs" />
     <None Include="Shaders\SolidRectWithTextureSeq.fs" />
     <None Include="Shaders\SolidRectWithTextureSeq.vs" />
+    <None Include="Shaders\SolidRectXY.fs" />
+    <None Include="Shaders\SolidRectXY.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
