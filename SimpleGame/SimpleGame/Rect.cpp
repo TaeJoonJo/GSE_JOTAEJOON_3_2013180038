@@ -212,7 +212,7 @@ void CRect::Update(float time)
 			m_fseqtimer = 0.f;
 		}
 	}
-	else if (m_ntype == OBJECT_PARTICLE)
+	else if (m_ntype == OBJECT_PARTICLE || m_ntype == OBJECT_BULLET)
 		m_fcolidetimer += time;
 
 	/*if (m_ntype == OBJECT_CHARACTER)

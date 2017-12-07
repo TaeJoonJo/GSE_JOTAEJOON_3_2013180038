@@ -48,7 +48,7 @@ bool CSceneMgr::Ready_Objects()
 	//m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
 	//m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
 
-	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle3.png");
+	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle2.png");
 
 	// 5x4
 	m_nbluecharspritetexId = g_Renderer->CreatePngTexture("../Resource/rocksprite2.png");
@@ -109,7 +109,7 @@ void CSceneMgr::Update_Objects(float time)
 					{
 						if ((*biter)->GetType() == OBJECT_BULLET)
 						{
-							Add_Object((*biter)->GetX(), (*biter)->GetY(), -(*biter)->GetDx(), -(*biter)->GetDy(), OBJECT_PARTICLE, (*biter)->GetTeam());
+							//Add_Object((*biter)->GetX(), (*biter)->GetY(), -(*biter)->GetDx(), -(*biter)->GetDy(), OBJECT_PARTICLE, (*biter)->GetTeam());
 						}
 
 						if (biter == iter)
@@ -172,13 +172,13 @@ void CSceneMgr::Update_Objects(float time)
 				else if (itype == OBJECT_BUILDING && jtype == OBJECT_BULLET)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
-					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
+					//Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
 				}
 				// 캐릭터와 총알간의 충돌
 				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_BULLET)
 				{
 					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
-					Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
+					//Add_Object(m_vGameObjects[j]->GetX(), m_vGameObjects[j]->GetY(), -m_vGameObjects[j]->GetDx(), -m_vGameObjects[j]->GetDy(), OBJECT_PARTICLE, m_vGameObjects[j]->GetTeam());
 				}
 				// 캐릭터와 화살간의 충돌
 				else if (itype == OBJECT_CHARACTER && jtype == OBJECT_ARROW)
@@ -228,9 +228,18 @@ void CSceneMgr::Draw_Objects()
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						m_vGameObjects[i]->GetDx(), m_vGameObjects[i]->GetDy(), m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetColideTime());
 				}
-				else
+				else if (type == OBJECT_BULLET)
+				{
 					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+						m_vGameObjects[i]->GetLevel());
+					g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+						-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime());
+				}
+				else
+					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+						m_vGameObjects[i]->GetSize() * 0.5f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						m_vGameObjects[i]->GetLevel());
 
 				if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
