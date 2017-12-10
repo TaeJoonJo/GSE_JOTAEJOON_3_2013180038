@@ -157,6 +157,7 @@ void CRect::Update(float time)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_ARROW, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
+			CSoundMgr::Bow();
 		}
 		if ((m_fseqtimer += time) > 0.1f)
 		{
@@ -193,6 +194,7 @@ void CRect::Update(float time)
 		{
 			CSceneMgr::Add_Object(m_fx, m_fy, OBJECT_BULLET, m_nId, m_nteam);
 			m_fshoottimer = 0.f;
+			CSoundMgr::Shoot();
 		}
 		if ((m_fseqtimer += time) > 0.1f)
 		{

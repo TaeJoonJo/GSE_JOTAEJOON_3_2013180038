@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "SceneMgr.h"
+#include "SoundMgr.h"
 #include "Renderer.h"
 
 class CRect :public CGameObject

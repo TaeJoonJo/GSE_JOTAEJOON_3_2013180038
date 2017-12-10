@@ -240,14 +240,15 @@ void CSceneMgr::Draw_Objects()
 						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						m_vGameObjects[i]->GetLevel());
 					g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+						m_vGameObjects[i]->GetSize() * 0.5f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime());
 				}
 				else
+				{
 					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize() * 0.5f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 						m_vGameObjects[i]->GetLevel());
-
+				}
 				if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
 				{
 					if (m_vGameObjects[i]->GetTeam() == TEAMBLUE)

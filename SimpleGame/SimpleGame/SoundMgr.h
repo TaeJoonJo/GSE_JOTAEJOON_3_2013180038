@@ -8,18 +8,21 @@ public:
 	CSoundMgr();
 	~CSoundMgr();
 private:
-	Sound *m_Sound;
+	static Sound *m_Sound;
 private:
-	int m_BgSound;
-	int m_ShootSound;
+	static int m_BgSound;
+	static int m_ShootSound;
+	static int m_BowSound;
 public:
-	inline void BgSound() {
+	static inline void BgSound() {
 		m_Sound->PlaySound(m_BgSound, true, 0.5f);
 	}
-	inline void Shoot() {
-		m_Sound->PlaySound(m_ShootSound, false, 0.5f);
+	static inline void Shoot() {
+		m_Sound->PlaySound(m_ShootSound, false, 1.f);
 	}
-
+	static inline void Bow() {
+		m_Sound->PlaySound(m_BowSound, false, 1.f);
+	}
 	void Init();
 };
 
