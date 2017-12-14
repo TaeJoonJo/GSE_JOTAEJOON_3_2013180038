@@ -10,7 +10,8 @@ int CSceneMgr::m_nobjectId = 0;
 
 CSceneMgr::CSceneMgr(CSoundMgr *soundmgr)
 	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nredchartexId(0), m_nbluechartexId(0), m_nbackgroundtexId(0),
-	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), m_npaticletexId(0),
+	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), 
+	m_npaticletexId(0), m_nstartexId(0),
 	m_fRedCharacterTimer(0.f)
 {
 	m_pSoundMgr = soundmgr;
@@ -48,6 +49,8 @@ bool CSceneMgr::Ready_Objects()
 
 	//m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
 	//m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
+
+	m_nstartexId = g_Renderer->CreatePngTexture("../Resource/Star2.png");
 
 	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle2.png");
 
@@ -203,66 +206,76 @@ void CSceneMgr::Update_Objects(float time)
 void CSceneMgr::Draw_Objects()
 {
 
-	if (m_vGameObjects.size() > 0)
+	
+	for (int i = 0; i < m_vGameObjects.size(); ++i)
 	{
-		for (int i = 0; i < m_vGameObjects.size(); ++i)
+		if (m_vGameObjects[i] != NULL)
 		{
-			if (m_vGameObjects[i] != NULL)
+			int type = m_vGameObjects[i]->GetType();
+			if (type == OBJECT_BUILDING)
 			{
-				int type = m_vGameObjects[i]->GetType();
-				if (type == OBJECT_BUILDING)
-				{
-					g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
-						m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
-				}
-				else if (type == OBJECT_CHARACTER)
-					g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
-						m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
-				else if (type == OBJECT_BACKGROUND)
-				{
-					g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetLevel());
-				}
-				else if (type == OBJECT_PARTICLE)
-				{
-					g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						m_vGameObjects[i]->GetDx(), m_vGameObjects[i]->GetDy(), m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetColideTime());
-				}
-				else if (type == OBJECT_BULLET)
-				{
-					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+				g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
+					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
+			}
+			else if (type == OBJECT_CHARACTER)
+				g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
+					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
+			else if (type == OBJECT_BACKGROUND)
+			{
+				g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetLevel());
+
+				float sAlpha = sin((m_vGameObjects[i]->GetColideTime()) * 2.f);
+				g_Renderer->DrawParticleClimate(0.f, 0.f, 0.f, 5.f,
+					1.f, 1.f, 1.f, 1.f,
+					-0.1f, -0.1f,
+					m_nstartexId,
+					m_vGameObjects[i]->GetColideTime(), 0.1f);
+			}
+			else if (type == OBJECT_PARTICLE)
+			{
+				g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GetDx(), m_vGameObjects[i]->GetDy(), m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetColideTime(),
+					m_vGameObjects[i]->GetLevel());
+			}
+			else if (type == OBJECT_BULLET)
+			{
+				g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GetLevel());
+					
+				float pAlpha = sin((m_vGameObjects[i]->GetColideTime()) * 2.f);
+				g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize() * 0.5f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), pAlpha,
+					-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime(),
+					m_vGameObjects[i]->GetLevel());
+			}
+			else
+			{
+				g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GetLevel());
+			}
+			if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
+			{
+				if (m_vGameObjects[i]->GetTeam() == TEAMBLUE)
+					g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
+						m_vGameObjects[i]->GetSize(), 10.f, 0.f, 0.f, 1.f, 1.f, m_vGameObjects[i]->GetLife() / m_vGameObjects[i]->GetMaxLife(),
 						m_vGameObjects[i]->GetLevel());
-					g_Renderer->DrawParticle(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize() * 0.5f, m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
-						-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime());
-				}
 				else
-				{
-					g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
-						m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
+						m_vGameObjects[i]->GetSize(), 10.f, 1.f, 0.f, 0.f, 1.f, m_vGameObjects[i]->GetLife() / m_vGameObjects[i]->GetMaxLife(),
 						m_vGameObjects[i]->GetLevel());
-				}
-				if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
-				{
-					if (m_vGameObjects[i]->GetTeam() == TEAMBLUE)
-						g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
-							m_vGameObjects[i]->GetSize(), 10.f, 0.f, 0.f, 1.f, 1.f, m_vGameObjects[i]->GetLife() / m_vGameObjects[i]->GetMaxLife(),
-							m_vGameObjects[i]->GetLevel());
-					else
-						g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
-							m_vGameObjects[i]->GetSize(), 10.f, 1.f, 0.f, 0.f, 1.f, m_vGameObjects[i]->GetLife() / m_vGameObjects[i]->GetMaxLife(),
-							m_vGameObjects[i]->GetLevel());
-				}
 			}
 		}
 	}
+	
 	g_Renderer->DrawText(0.f, 0.f, GLUT_BITMAP_TIMES_ROMAN_24, 0.f, 0.f, 0.f, "Hello World!");
 
 }

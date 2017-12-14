@@ -76,8 +76,8 @@ CRect::CRect(float x, float y, int type, int team)
 	{
 		m_flife = 15.f;
 		m_fmaxlife = m_flife;
-		m_fspeed = 600.f;
-		m_fsize = 4.f;
+		m_fspeed = 100.f;
+		m_fsize = 5.f;
 		m_flevel = 0.3f;
 		if (m_nteam == TEAMRED)
 			SetColor(1.f, 0.f, 0.f, 1.f);
@@ -214,9 +214,10 @@ void CRect::Update(float time)
 			m_fseqtimer = 0.f;
 		}
 	}
-	else if (m_ntype == OBJECT_PARTICLE || m_ntype == OBJECT_BULLET)
+	else if (m_ntype == OBJECT_PARTICLE || m_ntype == OBJECT_BULLET || m_ntype == OBJECT_BACKGROUND)
+	{
 		m_fcolidetimer += time;
-
+	}
 	/*if (m_ntype == OBJECT_CHARACTER)
 	{
 		float fhoriginsize = m_foriginsize * 0.5f;

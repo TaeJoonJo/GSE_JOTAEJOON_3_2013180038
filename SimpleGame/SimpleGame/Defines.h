@@ -17,10 +17,12 @@
 
 #define COOLTIME_CHAR 5.f
 
-#define SHOOTTIMER_BUILDING 10.f
+#define SHOOTTIMER_BUILDING 5.f
 #define SHOOTTIMER_CHAR 3.f
 
 #define REGENTIMER_RED 5.f
+
+#define TIMER_PARtICLE 4.f
 
 #define TEAMBLUE 2	// 아군
 #define TEAMRED 1	// 적군

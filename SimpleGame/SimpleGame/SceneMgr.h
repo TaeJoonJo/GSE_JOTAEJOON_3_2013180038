@@ -34,6 +34,8 @@ protected:
 	unsigned int m_nbluebuildingspritetexId;
 
 	unsigned int m_npaticletexId;
+
+	unsigned int m_nstartexId;
 public:
 	CSceneMgr(CSoundMgr* soundmgr);
 	~CSceneMgr();
