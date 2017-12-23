@@ -17,6 +17,10 @@ protected:
 
 	float m_fRedCharacterTimer;
 
+	float m_fQuakeTimer;
+
+	bool m_bQuake;
+
 	static int m_nobjectId;
 
 	unsigned int m_nbackgroundtexId;
@@ -34,8 +38,14 @@ protected:
 	unsigned int m_nbluebuildingspritetexId;
 
 	unsigned int m_npaticletexId;
+	unsigned int m_ncharexplosiontexId;
+	unsigned int m_nbuiexplosiontexId;
 
 	unsigned int m_nstartexId;
+
+	float m_fMoneyTimer;
+
+	int m_nMoney;
 public:
 	CSceneMgr(CSoundMgr* soundmgr);
 	~CSceneMgr();
@@ -44,6 +54,7 @@ public:
 	bool Ready_Objects();
 	void Update_Objects(float time);
 	void Draw_Objects();
+	int  Win_Check();
 
 	static Renderer* GetRenderer() {
 		return g_Renderer;
@@ -56,4 +67,23 @@ public:
 	void Add_Object(float x, float y, int type, int team);
 	static void Add_Object(float x, float y, int type, int id, int team);
 	void Add_Object(float x, float y, float dx, float dy, int type, int team);
+public:
+	inline int Get_Money() {
+		return m_nMoney;
+	};
+	inline void Set_Money(int money) {
+		m_nMoney = money;
+	}
+	inline void Earn(int earning) {
+		m_nMoney += earning;
+	}
+	inline bool Pay(int paid) {
+		m_nMoney -= paid;
+
+		if (m_nMoney >= 0)
+			return true;
+
+		m_nMoney += paid;
+		return false;
+	}
 };

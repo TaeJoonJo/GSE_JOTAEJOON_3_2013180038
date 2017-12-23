@@ -1120,7 +1120,7 @@ void Renderer::DrawText(float x, float y, void* font, float r, float g, float b,
 	glWindowPos2i(x+m_WindowSizeX/2, y+m_WindowSizeY/2);
 	glColor3f(r, g, b);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glutBitmapString(GLUT_BITMAP_HELVETICA_10, (unsigned char*)text);
+	glutBitmapString(font, (unsigned char*)text);
 }
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)

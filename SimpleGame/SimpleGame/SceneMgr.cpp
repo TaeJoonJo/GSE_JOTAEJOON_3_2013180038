@@ -11,8 +11,10 @@ int CSceneMgr::m_nobjectId = 0;
 CSceneMgr::CSceneMgr(CSoundMgr *soundmgr)
 	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nredchartexId(0), m_nbluechartexId(0), m_nbackgroundtexId(0),
 	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), 
-	m_npaticletexId(0), m_nstartexId(0),
-	m_fRedCharacterTimer(0.f)
+	m_npaticletexId(0), m_ncharexplosiontexId(0), m_nbuiexplosiontexId(0), m_nstartexId(0),
+	m_fRedCharacterTimer(0.f),
+	m_fQuakeTimer(0.f), m_bQuake(false),
+	m_nMoney(0), m_fMoneyTimer(0.f)
 {
 	m_pSoundMgr = soundmgr;
 	//m_ftime = timeGetTime();
@@ -21,6 +23,7 @@ CSceneMgr::CSceneMgr(CSoundMgr *soundmgr)
 CSceneMgr::~CSceneMgr()
 {
 	delete g_Renderer;
+	delete m_pSoundMgr;
 
 	for (auto d : m_vGameObjects)
 		delete d;
@@ -53,6 +56,8 @@ bool CSceneMgr::Ready_Objects()
 	m_nstartexId = g_Renderer->CreatePngTexture("../Resource/Star2.png");
 
 	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle2.png");
+	m_ncharexplosiontexId = g_Renderer->CreatePngTexture("../Resource/explosion.png");
+	m_nbuiexplosiontexId = g_Renderer->CreatePngTexture("../Resource/explosion2.png");
 
 	// 5x4
 	m_nbluecharspritetexId = g_Renderer->CreatePngTexture("../Resource/rocksprite2.png");
@@ -86,13 +91,32 @@ void CSceneMgr::Update_Objects(float time)
 	if (elsapedtime > 10.f)
 		elsapedtime = 10.f;
 
-	//g_Renderer->SetSceneTransform(elsapedtime * 100.f, elsapedtime * 100.f, 1.f, 1.f);
-	
+	if ((m_fMoneyTimer += elsapedtime) > TIMER_MONEY)
+	{
+		Earn(EARNING);
+
+		m_fMoneyTimer = 0.f;
+	}
+
 	if ((m_fRedCharacterTimer += elsapedtime) > REGENTIMER_RED)
 	{
 		Add_Object(GetRandom(-WINHALFSIZEX, WINHALFSIZEX), GetRandom(0.f, WINHALFSIZEY), OBJECT_CHARACTER, TEAMRED);
 
 		m_fRedCharacterTimer = 0.f;
+	}
+
+	if (m_bQuake)
+	{
+		float quakedegree = sin(m_fQuakeTimer * 40.f) * 20.f;
+
+		g_Renderer->SetSceneTransform(quakedegree, 0.f, 1.f, 1.f);
+		if ((m_fQuakeTimer += elsapedtime) > TIMER_QUAKE)
+		{
+			g_Renderer->SetSceneTransform(0.f, 0.f, 1.f, 1.f);
+
+			m_fQuakeTimer = 0.f;
+			m_bQuake = false;
+		}
 	}
 
 	// Delete
@@ -109,6 +133,18 @@ void CSceneMgr::Update_Objects(float time)
 		{
 			if ((*iter)->GetType() == OBJECT_CHARACTER || (*iter)->GetType() == OBJECT_BUILDING)
 			{
+				if((*iter)->GetType() == OBJECT_CHARACTER)
+				{
+					Add_Object((*iter)->GetX(), (*iter)->GetY(), OBJECT_CHAR_EXPLOSION, (*iter)->GetTeam());
+					CSoundMgr::Char_Explosion();
+				}
+				else
+				{
+					m_bQuake = true;
+					Add_Object((*iter)->GetX(), (*iter)->GetY(), OBJECT_BUI_EXPLOSION, (*iter)->GetTeam());
+					CSoundMgr::Bui_Explosion();
+				}
+
 				int charid = (*iter)->GetID();
 				for (VECTORITERATOR biter = iter; biter != m_vGameObjects.end();)
 				{
@@ -256,6 +292,20 @@ void CSceneMgr::Draw_Objects()
 					-m_vGameObjects[i]->GetDx(), -m_vGameObjects[i]->GetDy(), m_npaticletexId, m_vGameObjects[i]->GetColideTime(),
 					m_vGameObjects[i]->GetLevel());
 			}
+			else if (type == OBJECT_CHAR_EXPLOSION)
+			{
+				g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
+					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
+			}
+			else if (type == OBJECT_BUI_EXPLOSION)
+			{
+				g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
+					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
+			}
 			else
 			{
 				g_Renderer->DrawSolidRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
@@ -275,9 +325,46 @@ void CSceneMgr::Draw_Objects()
 			}
 		}
 	}
-	
-	g_Renderer->DrawText(0.f, 0.f, GLUT_BITMAP_TIMES_ROMAN_24, 0.f, 0.f, 0.f, "Hello World!");
 
+	string str = "Money : ";
+	char money[100];
+	ZeroMemory(money, sizeof(money));
+
+	_itoa(m_nMoney, money, 10);
+	str += money;
+	
+	char* text = new char[str.size() + 1];
+	ZeroMemory((void*)text, sizeof(text));
+
+	strcpy(text, str.c_str());
+	text[str.size()] = '\0';
+
+	g_Renderer->DrawText(145.f, -345.f, GLUT_BITMAP_HELVETICA_18, 1.f, 1.f, 1.f, text);
+
+	delete[] text;
+}
+
+int CSceneMgr::Win_Check()
+{
+	int nRedBuiCnt = 0;
+	int nBlueBuiCnt = 0;
+
+	for (int i = 0; i < m_vGameObjects.size(); ++i)
+	{
+		if (m_vGameObjects[i]->GetType() == OBJECT_BUILDING)
+		{
+			if (m_vGameObjects[i]->GetTeam() == TEAMRED)
+				++nRedBuiCnt;
+			else
+				++nBlueBuiCnt;
+		}
+	}
+
+	if (nRedBuiCnt == 0)
+		return WIN_BLUE;
+	if (nBlueBuiCnt == 0)
+		return WIN_RED;
+	return WIN_NOT;
 }
 
 void CSceneMgr::Add_Object(float x, float y, int type, int team)
@@ -310,6 +397,14 @@ void CSceneMgr::Add_Object(float x, float y, int type, int team)
 		else if (type == OBJECT_PARTICLE)
 		{
 			nRect->SettexID(m_npaticletexId);
+		}
+		else if (type == OBJECT_CHAR_EXPLOSION)
+		{
+			nRect->SettexID(m_ncharexplosiontexId);
+		}
+		else if (type == OBJECT_BUI_EXPLOSION)
+		{
+			nRect->SettexID(m_nbuiexplosiontexId);
 		}
 		m_vGameObjects.push_back(nRect);
 	}
@@ -365,6 +460,10 @@ void CSceneMgr::Add_Object(float x, float y, float dx, float dy, int type, int t
 		else if (type == OBJECT_PARTICLE)
 		{
 			nRect->SettexID(m_npaticletexId);
+		}
+		else if (type == OBJECT_CHAR_EXPLOSION)
+		{
+			nRect->SettexID(m_ncharexplosiontexId);
 		}
 		m_vGameObjects.push_back(nRect);
 	}

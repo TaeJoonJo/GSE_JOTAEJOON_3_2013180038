@@ -121,6 +121,30 @@ CRect::CRect(float x, float y, int type, int team)
 			SetColor(0.f, 0.f, 1.f, 1.f);
 		m_flifetime = 1.f;
 	}
+	else if (m_ntype == OBJECT_CHAR_EXPLOSION)
+	{
+		m_flife = 1.f;
+		m_fmaxlife = m_flife;
+		m_fspeed = 0.f;
+		m_fsize = 30.f;
+		m_flevel = 0.05f;
+		SetColor(1.f, 1.f, 1.f, 1.f);
+		m_flifetime = 10.f;
+		m_ntotalSeqx = 6;
+		m_ntotalSeqy = 1;
+	}
+	else if (m_ntype == OBJECT_BUI_EXPLOSION)
+	{
+		m_flife = 1.f;
+		m_fmaxlife = m_flife;
+		m_fspeed = 0.f;
+		m_fsize = 100.f;
+		m_flevel = 0.05f;
+		SetColor(1.f, 1.f, 1.f, 1.f);
+		m_flifetime = 10.f;
+		m_ntotalSeqx = 12;
+		m_ntotalSeqy = 1;
+	}
 
 	m_foriginsize = m_fsize;
 }
@@ -218,6 +242,39 @@ void CRect::Update(float time)
 	{
 		m_fcolidetimer += time;
 	}
+	else if (m_ntype == OBJECT_CHAR_EXPLOSION)
+	{
+		if ((m_fseqtimer += time) > 0.2f)
+		{
+
+			if (m_ncurrSeqx < m_ntotalSeqx - 1)
+			{
+				++m_ncurrSeqx;
+			}
+			else
+			{
+				m_flifetime = 0.f;
+			}
+			m_fseqtimer = 0.f;
+		}
+	}
+	else if (m_ntype == OBJECT_BUI_EXPLOSION)
+	{
+		if ((m_fseqtimer += time) > 0.2f)
+		{
+
+			if (m_ncurrSeqx < m_ntotalSeqx - 1)
+			{
+				++m_ncurrSeqx;
+			}
+			else
+			{
+				m_flifetime = 0.f;
+			}
+			m_fseqtimer = 0.f;
+		}
+	}
+	
 	/*if (m_ntype == OBJECT_CHARACTER)
 	{
 		float fhoriginsize = m_foriginsize * 0.5f;
