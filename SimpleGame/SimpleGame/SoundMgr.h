@@ -18,6 +18,7 @@ private:
 	static int m_ClickSound;
 	static int m_GenSound;
 	static int m_SelectSound;
+	static int m_KeyboardSound;
 public:
 	static inline void BgSound() {
 		m_Sound->PlaySound(m_BgSound, true, 1.f);
@@ -42,6 +43,9 @@ public:
 	}
 	static inline void Select() {
 		m_Sound->PlaySound(m_SelectSound, false, 1.f);
+	}
+	static inline void Keyboard() {
+		m_Sound->PlaySound(m_KeyboardSound, false, 0.5f);
 	}
 	void Init();
 };

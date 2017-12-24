@@ -7,7 +7,11 @@ it under the terms of the What The Hell License. Do it plz.
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY.
 */
-
+/*
+	기본 설명
+	생성은 기본 마우스 왼쪽클릭을 이용해 가능합니다.
+	키보드 a,s,d를 통해 유닛의 종류를 선택가능합니다.
+*/
 #include "stdafx.h"
 #include <iostream>
 #include "Dependencies\glew.h"
@@ -27,10 +31,12 @@ bool bStart = false;
 
 DWORD g_prevTime = 0;
 
+int g_Select = OBJECT_CHARACTER;
+
 bool g_isLeft = false;
-bool g_isRight = false;
 
 CCooltime CharCooltime;
+CCooltime SupCooltime;
 CCooltime BuiCooltime;
 
 void CoolTime(float time);
@@ -53,12 +59,14 @@ void RenderScene(void)
 	{
 		CoolTime((float)elapsedTime);
 
-		if (g_Scene->Win_Check() == WIN_NOT)
+		int whoswin = g_Scene->Win_Check();
+
+		if (whoswin == WIN_NOT)
 		{
 			g_Scene->Update_Objects((float)elapsedTime);
 			g_Scene->Draw_Objects();
 		}
-		else if (g_Scene->Win_Check() == WIN_RED)
+		else if (whoswin == WIN_RED)
 		{
 			if (fLetterColor <= 0.f || fLetterColor >= 1.f)
 				fLetterDir *= -1.f;
@@ -67,7 +75,7 @@ void RenderScene(void)
 
 			CSceneMgr::GetRenderer()->DrawText(-10.f, 0.f, GLUT_BITMAP_HELVETICA_12, fLetterColor, 0.f, 0.f, "You Lose");
 		}
-		else if (g_Scene->Win_Check() == WIN_BLUE)
+		else if (whoswin == WIN_BLUE)
 		{
 			if (fLetterColor <= 0.f || fLetterColor >= 1.f)
 				fLetterDir *= -1.f;
@@ -114,66 +122,81 @@ void MouseInput(int button, int state, int x, int y)
 	{
 		if (bStart && g_isLeft)
 		{
-			if (CharCooltime.m_isEnable)
+			if (g_Select == OBJECT_CHARACTER)
 			{
-				if (RenderSceney <= 0.f)
+				if (CharCooltime.m_isEnable)
 				{
-					if (g_Scene->Pay(COST_CHARACTER))
+					if (RenderSceney <= 0.f)
 					{
-						g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER, TEAMBLUE);
-						CharCooltime.m_isEnable = false;
-						CSoundMgr::Gen();
+						if (g_Scene->Pay(COST_CHARACTER))
+						{
+							g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_CHARACTER, TEAMBLUE);
+							CharCooltime.m_isEnable = false;
+							CSoundMgr::Gen();
+						}
+					}
+					else
+					{
+						printf("Character Only North\n");
 					}
 				}
 				else
 				{
-					printf("Character Only North\n");
+					printf("Char CoolTime : %f\n", CharCooltime.m_fCooltime);
+					printf("Character is Cooltime!\n");
 				}
 			}
-			else
+			else if (g_Select == OBJECT_SUPPLY)
 			{
-				printf("Char CoolTime : %f\n", CharCooltime.m_fCooltime);
-				printf("Character is Cooltime!\n");
+				if (SupCooltime.m_isEnable)
+				{
+					if (RenderSceney <= 0.f)
+					{
+						if (g_Scene->Pay(COST_SUPPLY))
+						{
+							g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_SUPPLY, TEAMBLUE);
+							SupCooltime.m_isEnable = false;
+							CSoundMgr::Gen();
+						}
+					}
+					else
+					{
+						printf("Supply Only North\n");
+					}
+				}
+				else
+				{
+					printf("Supply CoolTime : %f\n", SupCooltime.m_fCooltime);
+					printf("Supply is Cooltime!\n");
+				}
+			}
+			else if (g_Select == OBJECT_BUILDING)
+			{
+				if (BuiCooltime.m_isEnable)
+				{
+					if (RenderSceney <= 0.f)
+					{
+						if (g_Scene->Pay(COST_BUILDING))
+						{
+							g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_BUILDING, TEAMBLUE);
+							BuiCooltime.m_isEnable = false;
+							CSoundMgr::Gen();
+						}
+					}
+					else
+					{
+						printf("Builing Only North\n");
+					}
+				}
+				else
+				{
+					printf("Builing CoolTime : %f\n", BuiCooltime.m_fCooltime);
+					printf("Builing is Cooltime!\n");
+				}
 			}
 			g_isLeft = false;
 		}
 
-	}
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		CSoundMgr::Click();
-		if (bStart)
-		{
-			g_isRight = true;
-		}
-	}
-	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
-	{
-		if (bStart && g_isRight)
-		{
-			if (BuiCooltime.m_isEnable)
-			{
-				if (RenderSceney <= 0.f)
-				{
-					if (g_Scene->Pay(COST_BUILDING))
-					{
-						g_Scene->Add_Object(RenderScenex, RenderSceney, OBJECT_BUILDING, TEAMBLUE);
-						BuiCooltime.m_isEnable = false;
-						CSoundMgr::Gen();
-					}
-				}
-				else
-				{
-					printf("Builing Only North\n");
-				}
-			}
-			else
-			{
-				printf("Builing CoolTime : %f\n", BuiCooltime.m_fCooltime);
-				printf("Builing is Cooltime!\n");
-			}
-			g_isRight = false;
-		}
 	}
 
 	RenderScene();
@@ -192,7 +215,21 @@ void KeyInput(unsigned char key, int x, int y)
 	}
 	else if (bStart)
 	{
-
+		if (key == 'a' || key == 'A')
+		{
+			CSoundMgr::Select();
+			g_Select = OBJECT_CHARACTER;
+		}
+		else if (key == 's' || key == 'S')
+		{
+			CSoundMgr::Select();
+			g_Select = OBJECT_SUPPLY;
+		}
+		else if (key == 'd' || key == 'D')
+		{
+			CSoundMgr::Select();
+			g_Select = OBJECT_BUILDING;
+		}
 	}
 
 	RenderScene();
@@ -254,6 +291,15 @@ void CoolTime(float time)
 		{
 			CharCooltime.m_fCooltime = 0.f;
 			CharCooltime.m_isEnable = true;
+		}
+	}
+
+	if (!SupCooltime.m_isEnable)
+	{
+		if ((SupCooltime.m_fCooltime += elapedtime) >= COOLTIME_SUP)
+		{
+			SupCooltime.m_fCooltime = 0.f;
+			SupCooltime.m_isEnable = true;
 		}
 	}
 

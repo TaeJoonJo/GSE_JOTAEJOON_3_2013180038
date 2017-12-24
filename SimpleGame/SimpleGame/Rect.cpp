@@ -72,6 +72,16 @@ CRect::CRect(float x, float y, int type, int team)
 		m_flifetime = 100.f;
 		//m_ntexID = CSceneMgr::GetRenderer()->CreatePngTexture("../Resource/Moon.png");
 	}
+	else if (m_ntype == OBJECT_SUPPLY)
+	{
+		m_flife = 300.f;
+		m_fmaxlife = m_flife;
+		m_fspeed = 0.f;
+		m_fsize = 50.f;
+		m_flevel = 0.1f;
+		SetColor(1.f, 1.f, 1.f, 1.f);
+		m_flifetime = 100.f;
+	}
 	else if (m_ntype == OBJECT_BULLET)
 	{
 		m_flife = 15.f;

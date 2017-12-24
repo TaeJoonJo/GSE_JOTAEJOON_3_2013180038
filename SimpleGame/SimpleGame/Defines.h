@@ -11,6 +11,7 @@
 #define OBJECT_BACKGROUND -1
 #define OBJECT_CHARACTER 0
 #define OBJECT_BUILDING 1
+#define OBJECT_SUPPLY 2
 #define OBJECT_BULLET 10
 #define OBJECT_ARROW 11
 #define OBJECT_PARTICLE 12
@@ -18,11 +19,13 @@
 #define OBJECT_BUI_EXPLOSION 14
 
 #define COST_CHARACTER 20
+#define COST_SUPPLY    50
 #define COST_BUILDING  100
 
 #define MAX_ObJECTS_COUNT 1000
 
 #define COOLTIME_CHAR 1.f
+#define COOLTIME_SUP  5.f
 #define COOLTIME_BUI  10.f
 
 #define SHOOTTIMER_BUILDING 5.f
@@ -35,6 +38,7 @@
 #define TIMER_MONEY	   1.f
 
 #define EARNING		   5
+#define BONUS		   3
 
 #define TEAMBLUE 2	// 아군
 #define TEAMRED 1	// 적군

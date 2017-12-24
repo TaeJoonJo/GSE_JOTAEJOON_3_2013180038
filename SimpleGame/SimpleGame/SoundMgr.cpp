@@ -10,6 +10,7 @@ int CSoundMgr::m_Bui_ExplosionSound;
 int CSoundMgr::m_ClickSound;
 int CSoundMgr::m_GenSound;
 int CSoundMgr::m_SelectSound;
+int CSoundMgr::m_KeyboardSound;
 
 CSoundMgr::CSoundMgr()
 {
@@ -26,6 +27,7 @@ CSoundMgr::~CSoundMgr()
 	m_Sound->DeleteSound(m_ClickSound);
 	m_Sound->DeleteSound(m_GenSound);
 	m_Sound->DeleteSound(m_SelectSound);
+	m_Sound->DeleteSound(m_KeyboardSound);
 
 	delete m_Sound;
 }
@@ -43,4 +45,5 @@ void CSoundMgr::Init()
 	m_ClickSound = m_Sound->CreateSound("../Resource/Sound/click_sound.mp3");
 	m_GenSound = m_Sound->CreateSound("../Resource/Sound/hit.wav");
 	m_SelectSound = m_Sound->CreateSound("../Resource/Sound/Select.wav");
+	m_KeyboardSound = m_Sound->CreateSound("../Resource/Sound/Keyboard.wav");
 }

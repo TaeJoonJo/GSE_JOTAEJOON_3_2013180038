@@ -37,6 +37,8 @@ protected:
 	unsigned int m_nredbuildingspritetexId;
 	unsigned int m_nbluebuildingspritetexId;
 
+	unsigned int m_nsupplytexId;
+
 	unsigned int m_npaticletexId;
 	unsigned int m_ncharexplosiontexId;
 	unsigned int m_nbuiexplosiontexId;
@@ -84,6 +86,7 @@ public:
 			return true;
 
 		m_nMoney += paid;
+		printf("Not Enough Money You Need %d More\n", paid - m_nMoney);
 		return false;
 	}
 };

@@ -12,6 +12,7 @@ CSceneMgr::CSceneMgr(CSoundMgr *soundmgr)
 	:m_nredbuildingtexId(0), m_nbluebuildingtexId(0), m_nredchartexId(0), m_nbluechartexId(0), m_nbackgroundtexId(0),
 	m_nredbuildingspritetexId(0), m_nbluebuildingspritetexId(0), m_nredcharspritetexId(0), m_nbluecharspritetexId(0), 
 	m_npaticletexId(0), m_ncharexplosiontexId(0), m_nbuiexplosiontexId(0), m_nstartexId(0),
+	m_nsupplytexId(0),
 	m_fRedCharacterTimer(0.f),
 	m_fQuakeTimer(0.f), m_bQuake(false),
 	m_nMoney(0), m_fMoneyTimer(0.f)
@@ -53,6 +54,8 @@ bool CSceneMgr::Ready_Objects()
 	//m_nbluebuildingtexId = g_Renderer->CreatePngTexture("../Resource/Moon.png");
 	//m_nredbuildingtexId = g_Renderer->CreatePngTexture("../Resource/Planet.png");
 
+	m_nsupplytexId = g_Renderer->CreatePngTexture("../Resource/supply.png");
+
 	m_nstartexId = g_Renderer->CreatePngTexture("../Resource/Star2.png");
 
 	m_npaticletexId = g_Renderer->CreatePngTexture("../Resource/Paticle2.png");
@@ -93,7 +96,13 @@ void CSceneMgr::Update_Objects(float time)
 
 	if ((m_fMoneyTimer += elsapedtime) > TIMER_MONEY)
 	{
-		Earn(EARNING);
+		int bonus = 0;
+		for (int i = 0; i < m_vGameObjects.size(); ++i)
+		{
+			if (m_vGameObjects[i]->GetType() == OBJECT_SUPPLY)
+				++bonus;
+		}
+		Earn(EARNING + (bonus * BONUS));
 
 		m_fMoneyTimer = 0.f;
 	}
@@ -174,6 +183,11 @@ void CSceneMgr::Update_Objects(float time)
 			}
 			else
 			{
+				if ((*iter)->GetType() == OBJECT_SUPPLY)
+				{
+					Add_Object((*iter)->GetX(), (*iter)->GetY(), OBJECT_CHAR_EXPLOSION, (*iter)->GetTeam());
+					CSoundMgr::Char_Explosion();
+				}
 				iter = m_vGameObjects.erase(iter);
 			}
 		}
@@ -230,6 +244,20 @@ void CSceneMgr::Update_Objects(float time)
 					if(m_vGameObjects[i]->GetID() != m_vGameObjects[j]->GetID())
 						m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
 				}
+				else if (itype == OBJECT_SUPPLY && jtype == OBJECT_CHARACTER)
+				{
+					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
+				}
+				// 빌딩과 화살간의 충돌
+				else if (itype == OBJECT_SUPPLY && jtype == OBJECT_ARROW)
+				{
+					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
+				}
+				// 빌딩과 총알간의 충돌
+				else if (itype == OBJECT_SUPPLY && jtype == OBJECT_BULLET)
+				{
+					m_vGameObjects[i]->Attacked(m_vGameObjects[j]->Attack());
+				}
 			}
 		}
 	}
@@ -241,8 +269,6 @@ void CSceneMgr::Update_Objects(float time)
 
 void CSceneMgr::Draw_Objects()
 {
-
-	
 	for (int i = 0; i < m_vGameObjects.size(); ++i)
 	{
 		if (m_vGameObjects[i] != NULL)
@@ -256,10 +282,18 @@ void CSceneMgr::Draw_Objects()
 					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
 			}
 			else if (type == OBJECT_CHARACTER)
+			{
 				g_Renderer->DrawTexturedRectSeq(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
 					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->m_ncurrSeqx, m_vGameObjects[i]->m_ncurrSeqy,
 					m_vGameObjects[i]->m_ntotalSeqx, m_vGameObjects[i]->m_ntotalSeqy, m_vGameObjects[i]->GetLevel());
+			}
+			else if (type == OBJECT_SUPPLY)
+			{
+				g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
+					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
+					m_vGameObjects[i]->GettexID(), m_vGameObjects[i]->GetLevel());
+			}
 			else if (type == OBJECT_BACKGROUND)
 			{
 				g_Renderer->DrawTexturedRect(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY(), m_vGameObjects[i]->GetZ(),
@@ -312,7 +346,7 @@ void CSceneMgr::Draw_Objects()
 					m_vGameObjects[i]->GetSize(), m_vGameObjects[i]->GetRed(), m_vGameObjects[i]->GetGreen(), m_vGameObjects[i]->GetBlue(), m_vGameObjects[i]->GetAlpha(),
 					m_vGameObjects[i]->GetLevel());
 			}
-			if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER)
+			if (type == OBJECT_BUILDING || type == OBJECT_CHARACTER || type == OBJECT_SUPPLY)
 			{
 				if (m_vGameObjects[i]->GetTeam() == TEAMBLUE)
 					g_Renderer->DrawSolidRectGauge(m_vGameObjects[i]->GetX(), m_vGameObjects[i]->GetY() + (m_vGameObjects[i]->GetSize() * 0.8f), m_vGameObjects[i]->GetZ(),
@@ -405,6 +439,10 @@ void CSceneMgr::Add_Object(float x, float y, int type, int team)
 		else if (type == OBJECT_BUI_EXPLOSION)
 		{
 			nRect->SettexID(m_nbuiexplosiontexId);
+		}
+		else if (type == OBJECT_SUPPLY)
+		{
+			nRect->SettexID(m_nsupplytexId);
 		}
 		m_vGameObjects.push_back(nRect);
 	}
